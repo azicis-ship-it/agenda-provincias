@@ -1079,32 +1079,22 @@ function handleXlsxImport(e){
         });
       }
 
-      // Tareas sheet — smart merge: exact match, fuzzy match, or add new
+      // Tareas — reemplaza completamente por provincia (Excel es fuente de verdad)
       if(wb.SheetNames.includes('Tareas')){
         const rows=XLSX.utils.sheet_to_json(wb.Sheets['Tareas']);
+        const byProv={};
         rows.forEach(r=>{
           const p=String(r.Provincia||'').trim();
           const txt=String(r.Tarea||'').trim();
           if(!p||!txt||!D.provincias[p]) return;
-          const due=parseXlDate(r.FechaLimite);
-          const done=String(r.Completado||'').trim().toUpperCase()==='SI';
-          // 1. Try exact match
-          let idx=D.provincias[p].tasks.findIndex(t=>t.text.trim()===txt);
-          // 2. Try fuzzy: Excel text is contained in task OR task contained in Excel text
-          if(idx<0){
-            idx=D.provincias[p].tasks.findIndex(t=>
-              t.text.toLowerCase().includes(txt.toLowerCase()) ||
-              txt.toLowerCase().includes(t.text.toLowerCase().slice(0,15))
-            );
-          }
-          if(idx>=0){
-            D.provincias[p].tasks[idx].done=done;
-            if(due) D.provincias[p].tasks[idx].due=due;
-          } else {
-            // Add as new task
-            D.provincias[p].tasks.push({text:txt,done,due});
-          }
+          if(!byProv[p]) byProv[p]=[];
+          byProv[p].push({
+            text:txt,
+            done:String(r.Completado||'').trim().toUpperCase()==='SI',
+            due:parseXlDate(r.FechaLimite)
+          });
         });
+        Object.keys(byProv).forEach(p=>{ D.provincias[p].tasks=byProv[p]; });
       }
 
       // Historia sheet — merge new entries
