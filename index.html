@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agenda Provincias — Programa Riego</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+#lock-screen{position:fixed;inset:0;z-index:9999;background:#f7f5f0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif}
+#lock-screen.hidden{display:none}
+.lock-box{background:#fff;border:1px solid #e0dbd0;border-radius:14px;padding:44px 48px;width:min(360px,92vw);text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.lock-mark{font-family:'Instrument Serif',serif;font-style:italic;font-size:30px;color:#18170f;letter-spacing:-.02em;margin-bottom:4px}
+.lock-sub{font-size:11px;color:#a09880;text-transform:uppercase;letter-spacing:.1em;margin-bottom:32px}
+.lock-label{font-size:11px;font-weight:600;color:#6a6555;text-transform:uppercase;letter-spacing:.07em;display:block;text-align:left;margin-bottom:6px}
+.lock-input{width:100%;padding:10px 14px;border:1px solid #e0dbd0;border-radius:8px;font-size:15px;font-family:'Instrument Sans',sans-serif;color:#18170f;background:#fff;transition:border .12s;margin-bottom:14px;text-align:center;letter-spacing:.15em}
+.lock-input:focus{outline:none;border-color:#2a5c3f}
+.lock-btn{width:100%;padding:11px 0;border-radius:8px;background:#2a5c3f;color:#fff;border:none;font-size:13px;font-family:'Instrument Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .12s}
+.lock-btn:hover{background:#1b3d28}
+.lock-error{font-size:12px;color:#8b2020;margin-top:10px;background:#fde8e8;border-radius:6px;padding:6px 10px;display:none}
+.lock-error.show{display:block}
+</style>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -364,6 +378,18 @@ body{
 </style>
 </head>
 <body>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-mark">Riego</div>
+    <div class="lock-sub">Agenda de provincias</div>
+    <label class="lock-label">Contraseña</label>
+    <input class="lock-input" type="password" id="lock-input" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" onkeydown="if(event.key==='Enter')checkPassword()">
+    <button class="lock-btn" onclick="checkPassword()">Ingresar</button>
+    <div class="lock-error" id="lock-error">Contraseña incorrecta</div>
+  </div>
+</div>
 
 <button class="menu-btn" onclick="toggleSidebar()">☰</button>
 
@@ -990,6 +1016,30 @@ function saveProvEdit(){
 // ═══════════════════════════════════════════════════
 function triggerImport(){ document.getElementById('xlsx-input').click(); }
 
+// ═══════════════════════════════════════════════════
+// XLSX DATE PARSER — handles Excel serial numbers + strings
+// ═══════════════════════════════════════════════════
+function parseXlDate(val){
+  if(!val && val!==0) return '';
+  // Excel serial number (e.g. 45678)
+  if(typeof val==='number'){
+    const d=new Date(Math.round((val-25569)*86400*1000));
+    return d.toISOString().split('T')[0];
+  }
+  // Already a JS Date object (SheetJS sometimes returns these)
+  if(val instanceof Date){
+    return val.toISOString().split('T')[0];
+  }
+  // String like "2025-03-28" or "28/03/2025"
+  const s=String(val).trim();
+  if(!s||s==='nan') return '';
+  try{
+    const d=new Date(s);
+    if(!isNaN(d)) return d.toISOString().split('T')[0];
+  }catch(e){}
+  return '';
+}
+
 function handleXlsxImport(e){
   const file=e.target.files[0]; if(!file) return;
   const reader=new FileReader();
@@ -1004,8 +1054,8 @@ function handleXlsxImport(e){
         rows.forEach(r=>{
           const p=String(r.Provincia||'').trim();
           if(!p||!D.provincias[p]) return;
-          if(r.Estado) D.provincias[p].status=String(r.Estado).trim();
-          if(r.ProximoPaso) D.provincias[p].next=String(r.ProximoPaso).trim();
+          if(r.Estado) D.provincias[p].status=String(r.Estado).trim().toLowerCase();
+          if(r.ProximoPaso!==undefined&&r.ProximoPaso!==null) D.provincias[p].next=String(r.ProximoPaso).trim();
           const kpi={};
           if(r.Desembolsado&&+r.Desembolsado>0) kpi.desembolsado=+r.Desembolsado;
           if(r.Evaluacion&&+r.Evaluacion>0) kpi.evaluacion=+r.Evaluacion;
@@ -1019,28 +1069,22 @@ function handleXlsxImport(e){
         });
       }
 
-      // Tareas sheet — merge, don't duplicate
+      // Tareas sheet — merge + update all fields
       if(wb.SheetNames.includes('Tareas')){
         const rows=XLSX.utils.sheet_to_json(wb.Sheets['Tareas']);
         rows.forEach(r=>{
           const p=String(r.Provincia||'').trim();
           const txt=String(r.Tarea||'').trim();
           if(!p||!txt||!D.provincias[p]) return;
-          const exists=D.provincias[p].tasks.some(t=>t.text===txt);
-          if(!exists){
-            let due='';
-            if(r.FechaLimite){
-              try{ due=new Date(r.FechaLimite).toISOString().split('T')[0]; }catch(e){}
-            }
-            D.provincias[p].tasks.push({
-              text:txt,
-              done:String(r.Completado||'').trim().toUpperCase()==='SI',
-              due
-            });
+          const due=parseXlDate(r.FechaLimite);
+          const done=String(r.Completado||'').trim().toUpperCase()==='SI';
+          const idx=D.provincias[p].tasks.findIndex(t=>t.text===txt);
+          if(idx>=0){
+            // update existing task — overwrite done AND due date
+            D.provincias[p].tasks[idx].done=done;
+            if(due) D.provincias[p].tasks[idx].due=due;
           } else {
-            // update done status
-            const idx=D.provincias[p].tasks.findIndex(t=>t.text===txt);
-            if(idx>=0) D.provincias[p].tasks[idx].done=String(r.Completado||'').trim().toUpperCase()==='SI';
+            D.provincias[p].tasks.push({text:txt,done,due});
           }
         });
       }
@@ -1055,7 +1099,7 @@ function handleXlsxImport(e){
           const exists=D.entries.some(e=>e.prov===prov&&e.title===title);
           if(!exists){
             let date='';
-            if(r.Fecha){ try{ date=new Date(r.Fecha).toISOString().split('T')[0]; }catch(e){} }
+            date=parseXlDate(r.Fecha)||'';
             D.entries.push({
               prov,
               type:String(r.Tipo||'nota').trim(),
@@ -1068,9 +1112,14 @@ function handleXlsxImport(e){
         });
       }
 
-      alert(`✓ Excel importado correctamente. ${updated} provincias actualizadas.`);
       updateBadges();
       renderAgenda();
+      // re-render current page too
+      const cur=document.querySelector('.page.active').id.replace('page-','');
+      if(cur==='resumen') renderResumen();
+      if(cur==='provincias') renderProvincias();
+      if(cur==='historial') renderHistorial();
+      alert('✓ Excel importado: ' + updated + ' provincias y datos actualizados.');
     } catch(err){
       alert('Error al leer el archivo: '+err.message);
     }
@@ -1092,6 +1141,32 @@ function exportHTML(){
   const a=document.createElement('a');
   a.href=url;a.download='agenda-provincias.html';a.click();
   URL.revokeObjectURL(url);
+}
+
+
+// ═══════════════════════════════════════════════════
+// PASSWORD PROTECTION
+// ═══════════════════════════════════════════════════
+const PASSWORD = 'Riego'; // ← cambiá esto para actualizar la contraseña
+
+function checkPassword(){
+  const val = document.getElementById('lock-input').value;
+  if(val === PASSWORD){
+    document.getElementById('lock-screen').classList.add('hidden');
+    sessionStorage.setItem('auth','1');
+    document.getElementById('lock-input').value='';
+  } else {
+    const err = document.getElementById('lock-error');
+    err.classList.add('show');
+    document.getElementById('lock-input').value='';
+    document.getElementById('lock-input').focus();
+    setTimeout(()=>err.classList.remove('show'), 2500);
+  }
+}
+
+// Auto-unlock if already authenticated this session
+if(sessionStorage.getItem('auth')==='1'){
+  document.getElementById('lock-screen').classList.add('hidden');
 }
 
 // ═══════════════════════════════════════════════════
