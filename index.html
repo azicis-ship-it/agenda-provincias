@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Provincias — Programa Riego</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f7f5f0;
+  --surface:  #ffffff;
+  --surface2: #f0ede6;
+  --surface3: #e8e4db;
+  --border:   #e0dbd0;
+  --border2:  #ccc7ba;
+  --text:     #18170f;
+  --text2:    #6a6555;
+  --text3:    #a09880;
+  --green:    #2a5c3f;
+  --green-l:  #e6f0ea;
+  --green-t:  #1b3d28;
+  --amber:    #7a4e1a;
+  --amber-l:  #fdf2e4;
+  --red:      #8b2020;
+  --red-l:    #fde8e8;
+  --blue:     #1a3660;
+  --blue-l:   #e6edf7;
+  --r:        7px;
+  --rl:       12px;
+  --sidebar:  230px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'Instrument Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  line-height:1.55;
+  min-height:100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;
+  width:var(--sidebar);
+  background:var(--text);
+  display:flex;flex-direction:column;
+  z-index:50;
+  transition:transform .2s ease;
+}
+.sb-logo{
+  padding:28px 22px 22px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sb-logo-mark{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  font-size:22px;
+  color:#fff;
+  letter-spacing:-.02em;
+  line-height:1;
+  margin-bottom:4px;
+}
+.sb-logo-sub{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em}
+
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto}
+.sb-section{padding:16px 22px 4px;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.sb-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 22px;
+  cursor:pointer;
+  font-size:12.5px;
+  color:rgba(255,255,255,.55);
+  transition:all .12s;
+  border-left:2px solid transparent;
+  user-select:none;
+}
+.sb-item:hover{color:rgba(255,255,255,.88);background:rgba(255,255,255,.04)}
+.sb-item.active{color:#fff;background:rgba(255,255,255,.07);border-left-color:#7ec99a}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-badge{
+  margin-left:auto;
+  font-size:9.5px;font-family:'DM Mono',monospace;
+  padding:1px 7px;border-radius:99px;
+  background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);
+}
+.sb-badge.red{background:#b91c1c;color:#fff}
+
+.sb-footer{
+  padding:14px 22px;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:10px;color:rgba(255,255,255,.25);
+  line-height:1.6;
+}
+
+/* ── MAIN ── */
+.main{
+  margin-left:var(--sidebar);
+  min-height:100vh;
+  padding:36px 40px;
+  max-width:calc(var(--sidebar) + 1000px);
+}
+
+/* ── PAGES ── */
+.page{display:none;animation:fadeIn .15s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:12px}
+.ph-title{font-size:24px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+.ph-sub{font-size:13px;color:var(--text3);margin-top:3px}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 15px;border-radius:var(--r);
+  border:1px solid var(--border2);
+  background:var(--surface);color:var(--text2);
+  font-size:12px;font-family:'Instrument Sans',sans-serif;font-weight:500;
+  cursor:pointer;transition:all .12s;white-space:nowrap;
+}
+.btn:hover{background:var(--surface2);color:var(--text)}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-green:hover{background:var(--green-t);color:#fff;border-color:var(--green-t)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--text3)}
+.btn-ghost:hover{background:var(--surface2);border-color:var(--border);color:var(--text)}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px}
+.card-flush{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+
+/* ── STAT CARDS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.stat{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rl);padding:18px 20px;
+}
+.stat-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.stat-val{font-size:32px;font-weight:400;color:var(--text);font-family:'DM Mono',monospace;line-height:1}
+.stat-val span{font-size:16px;color:var(--text3)}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* ── STATUS BADGES ── */
+.badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:500}
+.badge-activo{background:var(--green-l);color:var(--green-t)}
+.badge-pausado{background:var(--amber-l);color:var(--amber)}
+.badge-pendiente{background:var(--surface2);color:var(--text2)}
+.badge-cerrado{background:var(--red-l);color:var(--red)}
+
+/* ── PROVINCE PILLS ── */
+.ppill{display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500;border:1px solid transparent}
+.pp-Mendoza{background:#e8f0fb;color:#1a3a6c;border-color:#c5d6f0}
+.pp-LaRioja{background:#fbe8f0;color:#6c1a3a;border-color:#f0c5d6}
+.pp-RioNegro{background:#e8fbf0;color:#1a6c3a;border-color:#c5f0d6}
+.pp-Formosa{background:#fbf5e8;color:#6c4a1a;border-color:#f0e0c5}
+.pp-SanLuis{background:#f3e8fb;color:#4a1a6c;border-color:#dcc5f0}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.filter-label{font-size:11px;color:var(--text3);margin-right:2px}
+.fbtn{
+  padding:4px 12px;border-radius:99px;
+  border:1px solid var(--border);
+  background:var(--surface);color:var(--text2);
+  font-size:12px;cursor:pointer;transition:all .12s;
+}
+.fbtn:hover{border-color:var(--border2);color:var(--text)}
+.fbtn.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+/* ── AGENDA TABLE ── */
+.ag-table{width:100%;border-collapse:collapse}
+.ag-table th{
+  font-size:10px;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.07em;
+  padding:0 16px 12px;text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.ag-table td{padding:11px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ag-table tr:last-child td{border-bottom:none}
+.ag-table tbody tr{transition:background .1s}
+.ag-table tbody tr:hover td{background:var(--surface2)}
+
+.task-cb{
+  width:17px;height:17px;
+  border:1.5px solid var(--border2);border-radius:4px;
+  cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .12s;
+}
+.task-cb:hover{border-color:var(--green)}
+.task-cb.done{background:var(--green);border-color:var(--green)}
+.task-cb.done::after{
+  content:'';display:block;
+  width:9px;height:6px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translate(1px,-1px);
+}
+
+.done-text{text-decoration:line-through;color:var(--text3)}
+
+.date-pill{
+  font-size:11px;font-family:'DM Mono',monospace;
+  padding:2px 8px;border-radius:4px;
+  display:inline-block;
+}
+.date-overdue{background:#fde8e8;color:#8b2020}
+.date-today{background:#fdf2e4;color:#7a4e1a}
+.date-soon{background:#fdf8e4;color:#6a5a1a}
+.date-ok{background:var(--green-l);color:var(--green-t)}
+.date-none{color:var(--text3);font-size:11px}
+
+.date-input{
+  font-size:11px;padding:3px 8px;
+  border:1px solid var(--border);border-radius:4px;
+  background:var(--surface);color:var(--text);
+  font-family:'DM Mono',monospace;cursor:pointer;
+  transition:border .12s;
+}
+.date-input:focus{outline:none;border-color:var(--green)}
+
+/* ── PROVINCE TABS ── */
+.prov-tabs{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.ptab{
+  padding:7px 16px;border-radius:var(--r);
+  border:1px solid var(--border);
+  background:var(--surface);color:var(--text2);
+  font-size:12.5px;cursor:pointer;transition:all .12s;
+}
+.ptab:hover{background:var(--surface2)}
+.ptab.active{background:var(--text);color:#fff;border-color:var(--text)}
+.ptab-count{font-size:9.5px;opacity:.55;margin-left:5px;font-family:'DM Mono',monospace}
+
+/* ── SECTION LABEL ── */
+.slabel{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:10px}
+
+/* ── KPI ROW ── */
+.kpi-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.kpi{background:var(--surface2);border-radius:var(--r);padding:12px 16px;flex:1;min-width:120px}
+.kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.kpi-val{font-size:20px;font-weight:400;font-family:'DM Mono',monospace;color:var(--text);margin-top:2px}
+
+/* ── NEXT STEP BOX ── */
+.next-box{
+  background:var(--green-l);border:1px solid #c5dfc9;
+  border-radius:var(--r);padding:12px 16px;
+  font-size:13px;color:var(--green-t);line-height:1.6;
+  margin-bottom:20px;
+}
+
+/* ── TASKS ── */
+.task-list{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.task-row-prov{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 12px;border-radius:var(--r);
+  border:1px solid transparent;
+  transition:all .12s;
+}
+.task-row-prov:hover{background:var(--surface2);border-color:var(--border)}
+.task-row-prov.done-row{opacity:.6}
+.task-txt{font-size:13px;flex:1}
+.task-due-inline{font-size:11px;margin-top:2px;font-family:'DM Mono',monospace}
+
+/* ── TAGS ── */
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.tag{
+  font-size:11px;padding:3px 10px;border-radius:99px;
+  background:var(--surface2);color:var(--text2);
+  border:1px solid var(--border);
+}
+
+/* ── TIMELINE ── */
+.timeline{display:flex;flex-direction:column}
+.tl-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.tl-item:last-child{border-bottom:none}
+.tl-left{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.tl-line{width:1px;flex:1;background:var(--border);margin-top:5px}
+.tl-body{flex:1}
+.tl-title{font-size:13px;font-weight:500}
+.tl-meta{display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap}
+.tl-date{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+.tl-type{
+  font-size:10px;padding:1px 7px;border-radius:99px;
+  background:var(--surface2);color:var(--text2);border:1px solid var(--border);
+}
+.tl-notes{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.65;white-space:pre-wrap}
+
+/* ── RESUMEN CARDS ── */
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.res-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.res-pname{font-size:15px;font-weight:600}
+.res-pending-list{margin-top:10px}
+.res-pending-item{
+  font-size:12px;color:var(--text2);
+  padding:4px 0;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.res-pending-item:last-child{border-bottom:none}
+.res-pending-item::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.res-more{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(15,14,10,.5);
+  z-index:100;align-items:center;justify-content:center;
+  backdrop-filter:blur(2px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rl);padding:26px;
+  width:min(520px,94vw);max-height:88vh;overflow-y:auto;
+  animation:modalIn .15s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.modal-title{font-size:17px;font-weight:600;letter-spacing:-.01em;margin-bottom:20px}
+.fg{margin-bottom:14px}
+.fl{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{
+  width:100%;padding:8px 12px;
+  border:1px solid var(--border);border-radius:var(--r);
+  background:var(--surface);color:var(--text);
+  font-size:13px;font-family:'Instrument Sans',sans-serif;
+  resize:vertical;transition:border .12s;
+}
+.fg textarea{min-height:80px}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--green)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--border);padding-top:16px}
+
+/* ── IMPORT BANNER ── */
+.import-bar{
+  background:var(--blue-l);border:1px solid #c5d6e8;
+  border-radius:var(--r);padding:10px 16px;
+  font-size:12px;color:var(--blue);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;flex-wrap:wrap;
+}
+
+/* ── MOBILE ── */
+.menu-btn{
+  display:none;position:fixed;top:14px;left:14px;z-index:60;
+  background:var(--text);color:#fff;border:none;
+  border-radius:var(--r);width:36px;height:36px;
+  font-size:16px;cursor:pointer;
+  align-items:center;justify-content:center;
+}
+@media(max-width:820px){
+  .menu-btn{display:flex}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:20px 16px;padding-top:60px}
+}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:13px}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">Riego</div>
+    <div class="sb-logo-sub">Agenda de provincias</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Vistas</div>
+    <div class="sb-item active" onclick="showPage('agenda',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 11h4"/></svg>
+      Agenda
+      <span class="sb-badge red" id="badge-agenda">0</span>
+    </div>
+    <div class="sb-item" onclick="showPage('resumen',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      Resumen general
+    </div>
+    <div class="sb-item" onclick="showPage('provincias',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="5" height="7" rx="1"/><rect x="9" y="2" width="5" height="12" rx="1"/></svg>
+      Provincias
+      <span class="sb-badge" id="badge-prov">5</span>
+    </div>
+    <div class="sb-item" onclick="showPage('historial',this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v4l2.5 2.5M2.5 8a5.5 5.5 0 1 0 11 0 5.5 5.5 0 0 0-11 0z"/></svg>
+      Historial
+    </div>
+    <div class="sb-section">Acciones</div>
+    <div class="sb-item" onclick="openModal('m-entrada')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+      Nueva entrada
+    </div>
+    <div class="sb-item" onclick="triggerImport()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8m-3-3 3 3 3-3M3 12h10"/></svg>
+      Importar Excel
+    </div>
+    <div class="sb-item" onclick="exportHTML()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10v3h10v-3M8 2v8m-3-3 3 3 3-3"/></svg>
+      Exportar HTML
+    </div>
+  </div>
+  <div class="sb-footer" id="sb-footer">Panel de seguimiento</div>
+</nav>
+
+<main class="main">
+
+  <!-- ══ AGENDA ══ -->
+  <div class="page active" id="page-agenda">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Agenda y próximos pasos</div>
+        <div class="ph-sub">Tareas pendientes de todas las provincias, ordenadas por fecha límite</div>
+      </div>
+      <button class="btn btn-green" onclick="openModal('m-entrada')">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        Nueva entrada
+      </button>
+    </div>
+
+    <div class="filters">
+      <span class="filter-label">Filtrar:</span>
+      <button class="fbtn active" onclick="setAgFilter('todas',this)">Todas</button>
+      <button class="fbtn" onclick="setAgFilter('Mendoza',this)">Mendoza</button>
+      <button class="fbtn" onclick="setAgFilter('La Rioja',this)">La Rioja</button>
+      <button class="fbtn" onclick="setAgFilter('Río Negro',this)">Río Negro</button>
+      <button class="fbtn" onclick="setAgFilter('Formosa',this)">Formosa</button>
+      <button class="fbtn" onclick="setAgFilter('San Luis',this)">San Luis</button>
+      <button class="fbtn" onclick="setAgFilter('pendientes',this)" style="margin-left:6px">Solo pendientes</button>
+    </div>
+
+    <div class="card-flush">
+      <table class="ag-table">
+        <thead>
+          <tr>
+            <th style="width:40px"></th>
+            <th>Tarea / hito</th>
+            <th style="width:130px">Provincia</th>
+            <th style="width:160px">Fecha límite</th>
+          </tr>
+        </thead>
+        <tbody id="ag-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ RESUMEN ══ -->
+  <div class="page" id="page-resumen">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Resumen general</div>
+        <div class="ph-sub">Estado consolidado de las 5 provincias</div>
+      </div>
+    </div>
+    <div class="stat-grid" id="res-stats"></div>
+    <div class="res-grid" id="res-cards"></div>
+  </div>
+
+  <!-- ══ PROVINCIAS ══ -->
+  <div class="page" id="page-provincias">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Provincias</div>
+        <div class="ph-sub">Detalle completo por provincia</div>
+      </div>
+      <button class="btn btn-green" onclick="openModal('m-entrada')">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        Registrar
+      </button>
+    </div>
+    <div class="prov-tabs" id="prov-tabs"></div>
+    <div id="prov-detail"></div>
+  </div>
+
+  <!-- ══ HISTORIAL ══ -->
+  <div class="page" id="page-historial">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Historial de actividad</div>
+        <div class="ph-sub">Reuniones, llamadas y notas registradas</div>
+      </div>
+      <button class="btn btn-green" onclick="openModal('m-entrada')">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        Registrar
+      </button>
+    </div>
+    <div class="filters" id="hist-filters">
+      <span class="filter-label">Filtrar:</span>
+      <button class="fbtn active" onclick="setHistFilter('todas',this)">Todas</button>
+      <button class="fbtn" onclick="setHistFilter('Mendoza',this)">Mendoza</button>
+      <button class="fbtn" onclick="setHistFilter('La Rioja',this)">La Rioja</button>
+      <button class="fbtn" onclick="setHistFilter('Río Negro',this)">Río Negro</button>
+      <button class="fbtn" onclick="setHistFilter('Formosa',this)">Formosa</button>
+      <button class="fbtn" onclick="setHistFilter('San Luis',this)">San Luis</button>
+    </div>
+    <div class="card" id="hist-list" style="padding:0 22px"></div>
+  </div>
+
+</main>
+
+<!-- ══ MODAL: nueva entrada ══ -->
+<div class="modal-overlay" id="m-entrada">
+  <div class="modal">
+    <div class="modal-title">Registrar nueva entrada</div>
+    <div class="fg"><label class="fl">Provincia</label>
+      <select id="e-prov"><option>Mendoza</option><option>La Rioja</option><option>Río Negro</option><option>Formosa</option><option>San Luis</option></select>
+    </div>
+    <div class="fg"><label class="fl">Tipo</label>
+      <select id="e-type"><option value="reunion">Reunión</option><option value="llamada">Llamada</option><option value="seguimiento">Seguimiento</option><option value="avance">Avance</option><option value="propuesta">Propuesta</option><option value="nota">Nota interna</option></select>
+    </div>
+    <div class="fg"><label class="fl">Título</label><input type="text" id="e-title" placeholder="Ej: Reunión de seguimiento con equipo"></div>
+    <div class="fg"><label class="fl">Notas</label><textarea id="e-notes" placeholder="¿Qué se habló? ¿Qué quedó pendiente?"></textarea></div>
+    <div class="fg"><label class="fl">Fecha</label><input type="date" id="e-date"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModals()">Cancelar</button>
+      <button class="btn btn-green" onclick="saveEntry()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: editar provincia ══ -->
+<div class="modal-overlay" id="m-edit-prov">
+  <div class="modal">
+    <div class="modal-title" id="ep-modal-title">Editar provincia</div>
+    <input type="hidden" id="ep-key">
+    <div class="fg"><label class="fl">Estado</label>
+      <select id="ep-status"><option value="activo">Activo</option><option value="pausado">Pausado</option><option value="pendiente">Pendiente</option><option value="cerrado">Cerrado</option></select>
+    </div>
+    <div class="fg"><label class="fl">Próximo paso</label><input type="text" id="ep-next" placeholder="¿Qué sigue hacer?"></div>
+    <div class="fg"><label class="fl">Créditos desembolsados ($M)</label><input type="number" id="ep-k1"></div>
+    <div class="fg"><label class="fl">Créditos en evaluación ($M)</label><input type="number" id="ep-k2"></div>
+    <div class="fg"><label class="fl">Diagnósticos aprobados</label><input type="number" id="ep-k3"></div>
+    <div class="fg"><label class="fl">Agregar tarea / hito</label>
+      <div style="display:flex;gap:6px">
+        <input type="text" id="ep-task-in" placeholder="Nueva tarea..." style="flex:1">
+        <button class="btn btn-sm" onclick="addEditTask()">+</button>
+      </div>
+    </div>
+    <div id="ep-task-list" style="margin-top:8px;display:flex;flex-direction:column;gap:4px"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModals()">Cancelar</button>
+      <button class="btn btn-green" onclick="saveProvEdit()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- hidden file input for xlsx import -->
+<input type="file" id="xlsx-input" accept=".xlsx,.xls" style="display:none" onchange="handleXlsxImport(event)">
+
+<!-- SheetJS for Excel parsing -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════
+// DATA — merged from hardcoded history + Excel
+// ═══════════════════════════════════════════════════
+const PROVS = ['Mendoza','La Rioja','Río Negro','Formosa','San Luis'];
+
+function defaultData(){
+  return {
+    provincias:{
+      'Mendoza':{
+        status:'activo',
+        next:'Reunión de seguimiento 25/3 — confirmar agenda y participantes.',
+        kpi:{desembolsado:600,evaluacion:1562,diagnosticos:7},
+        lineasAccion:['Capacitación a medianos productores'],
+        tasks:[
+          {text:'Capacitaciones presenciales Malargüe y Tunuyán (Abril)',done:true,due:''},
+          {text:'Cambio de estrategia crediticia a medianos y grandes',done:true,due:''},
+          {text:'Nuevo ciclo de capacitaciones post mitad de año',done:false,due:'2025-07-15'},
+          {text:'Diagnósticos en proceso',done:false,due:''},
+          {text:'Reunión de seguimiento 25/3',done:false,due:'2025-03-25'}
+        ]
+      },
+      'La Rioja':{
+        status:'activo',
+        next:'Avanzar en implementación de las líneas de acción priorizadas en el taller del 17/3.',
+        kpi:{},
+        lineasAccion:['Capacitación a pequeños productores','Capacitación y fortalecimiento de consorcios de riego','Capacitación a productores medianos tecnificados','Formación de técnicos diagnosticadores'],
+        tasks:[
+          {text:'06/02 — Presentación del Programa (Min. Producción, Agua y Energía, Trabajo e INTA)',done:true,due:''},
+          {text:'17/03 — Taller de inicio con CFI, Min. Producción y Min. Agua y Energía',done:true,due:''},
+          {text:'Implementar: capacitación a pequeños productores',done:false,due:''},
+          {text:'Implementar: capacitación y fortalecimiento de consorcios de riego',done:false,due:''},
+          {text:'Implementar: capacitación a productores medianos tecnificados',done:false,due:''},
+          {text:'Implementar: formación de técnicos diagnosticadores',done:false,due:'2025-08-01'}
+        ]
+      },
+      'Río Negro':{
+        status:'activo',
+        next:'Segunda jornada AT semana 27/04 — Riego Gravitacional, Villa Regina.',
+        kpi:{},
+        lineasAccion:[],
+        tasks:[
+          {text:'Lanzamiento Programa segunda quincena marzo',done:true,due:''},
+          {text:'Reunión viernes 20/03',done:true,due:''},
+          {text:'1ª jornada AT — Riego Presurizado, Guardia Mitre',done:false,due:'2025-04-06'},
+          {text:'2ª jornada AT — Riego Gravitacional, Villa Regina',done:false,due:'2025-04-27'},
+          {text:'3ª jornada AT — Riego Gravitacional, Conesa',done:false,due:'2025-08-01'}
+        ]
+      },
+      'Formosa':{
+        status:'activo',
+        next:'Reunión con Ricardo Velazco (última semana de marzo) — definir cómo continuar y fecha del taller inicial.',
+        kpi:{},
+        lineasAccion:[],
+        tasks:[
+          {text:'Reunión 04/03 con Ricardo Velazco y Nazareno García (Subsecretario)',done:true,due:''},
+          {text:'Contacto con Ricardo — reunión de seguimiento solicitada',done:true,due:''},
+          {text:'Reunión de seguimiento con Ricardo Velazco',done:false,due:'2025-03-28'},
+          {text:'Definir fecha del taller inicial',done:false,due:''}
+        ]
+      },
+      'San Luis':{
+        status:'activo',
+        next:'Confirmar reunión con Gustavo del Bosco para avanzar con el programa.',
+        kpi:{},
+        lineasAccion:['Evaluación de pasos para avanzar con taller de inicio'],
+        tasks:[
+          {text:'Evaluar información del plan maestro de agua de la provincia',done:true,due:''},
+          {text:'Presentación del Programa 12/03',done:true,due:''},
+          {text:'Reunión con Gustavo del Bosco para avanzar con el programa',done:false,due:'2025-04-07'}
+        ]
+      }
+    },
+    entries:[
+      {prov:'Mendoza',type:'avance',date:'2025-03-27',title:'Actualización general de avance',notes:'Capacitaciones presenciales en Malargüe y Tunuyán confirmadas para Abril.\nCambio de estrategia crediticia hacia medianos y grandes productores.\nNuevo ciclo de capacitaciones planificado post mitad de año.\n7 diagnósticos aprobados, resto en proceso.\nCréditos desembolsados: $600M — Créditos en evaluación: $1.562M.',id:1001},
+      {prov:'Río Negro',type:'avance',date:'2025-03-27',title:'Actualización general de avance',notes:'Lanzamiento del Programa segunda quincena de marzo.\nReunión 20/03 realizada.\nJornadas AT:\n— 06/04: Riego Presurizado, Guardia Mitre\n— 27/04: Riego Gravitacional, Villa Regina\n— Agosto: Riego Gravitacional, Conesa',id:1002},
+      {prov:'San Luis',type:'avance',date:'2025-03-27',title:'Actualización general de avance',notes:'Evaluación del plan maestro completada.\nPresentación del Programa realizada el 12/03.\nReunión solicitada con Gustavo del Bosco — pendiente de confirmar fecha.',id:1003},
+      {prov:'Formosa',type:'reunion',date:'2025-03-04',title:'Reunión con Ricardo Velazco y Nazareno García (Subsecretario)',notes:'Se presentó el Programa.\nQuedaron en evaluar cómo encarar el programa para poner fecha al taller inicial.',id:1004},
+      {prov:'Formosa',type:'seguimiento',date:'2025-03-27',title:'Contacto con Ricardo — reunión de seguimiento solicitada',notes:'Se contactó a Ricardo Velazco.\nPróxima reunión: última semana de marzo.',id:1005},
+      {prov:'La Rioja',type:'reunion',date:'2025-02-06',title:'Presentación del Programa',notes:'Participaron:\n— Min. Producción y Ambiente: Fabricio Roger, Elizabeth Kober, Domingo Sasso\n— Min. Agua y Energía: María José Toledo, Mauro Bravo, Carlos de la Fuente, Belén Cuenca\n— Min. Trabajo, Empleo, Industria y Minería: Ana Paula Seppi, Paula Ruarte\n— INTA: Diego Pereyra, Ana Córdoba\n\nSe repasó el Plan Maestro de Recursos Hídricos. Se presentó el Programa y sus implicancias para La Rioja.',id:1006},
+      {prov:'La Rioja',type:'reunion',date:'2025-03-17',title:'Taller de inicio',notes:'Participaron: CFI, Ministerio de Producción y Ambiente, Ministerio de Agua y Energía.\n\nLíneas de acción priorizadas:\n— Capacitación a pequeños productores\n— Capacitación y fortalecimiento de consorcios de riego\n— Capacitación a productores medianos tecnificados\n— Formación de técnicos diagnosticadores',id:1007},
+      {prov:'Río Negro',type:'llamada',date:'2025-03-20',title:'Reunión con Min. Producción',notes:'Se presentaron los planes principales del programa.',id:1008},
+      {prov:'San Luis',type:'avance',date:'2025-03-12',title:'Presentación del programa',notes:'Reunión solicitada para próximos pasos.',id:1009}
+    ]
+  };
+}
+
+let D = defaultData();
+let activeProvTab = 'Mendoza';
+let agFilter = 'todas';
+let histFilter = 'todas';
+let editTasksTmp = [];
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function pk(p){ return p.replace(/\s/g,'').replace(/[éê]/g,'e').replace(/[ó]/g,'o').replace(/[í]/g,'i').replace(/[ñ]/g,'n'); }
+
+function ppill(p){
+  return `<span class="ppill pp-${pk(p)}">${p}</span>`;
+}
+
+function sbadge(s){
+  return `<span class="badge badge-${s}">${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+}
+
+function dotColor(t){
+  const m={avance:'#2a5c3f',reunion:'#1a3660',propuesta:'#6c4a1a',seguimiento:'#4a1a6c',llamada:'#1a5c5c',nota:'#888'};
+  return m[t]||'#aaa';
+}
+
+function datePill(due, done){
+  if(done) return '<span style="color:var(--text3);font-size:11px">Completado</span>';
+  if(!due) return '<span class="date-none">Sin fecha</span>';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(due+'T00:00:00');
+  const diff = Math.round((d - today)/(1000*60*60*24));
+  const fmt = d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+  if(diff < 0)  return `<span class="date-pill date-overdue">${fmt} (${Math.abs(diff)}d atrás)</span>`;
+  if(diff === 0) return `<span class="date-pill date-today">${fmt} (hoy)</span>`;
+  if(diff <= 7)  return `<span class="date-pill date-soon">${fmt} (${diff}d)</span>`;
+  return `<span class="date-pill date-ok">${fmt}</span>`;
+}
+
+function updateBadges(){
+  const pending = PROVS.reduce((a,p)=>a+(D.provincias[p]?.tasks||[]).filter(t=>!t.done).length, 0);
+  const b = document.getElementById('badge-agenda');
+  b.textContent = pending;
+  b.className = pending > 0 ? 'sb-badge red' : 'sb-badge';
+  document.getElementById('sb-footer').textContent = 'Actualizado: ' + new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function showPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  if(name==='resumen') renderResumen();
+  if(name==='provincias') renderProvincias();
+  if(name==='historial') renderHistorial();
+  if(name==='agenda') renderAgenda();
+  document.getElementById('sidebar').classList.remove('open');
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+// ═══════════════════════════════════════════════════
+// AGENDA
+// ═══════════════════════════════════════════════════
+function renderAgenda(){
+  let rows = [];
+  PROVS.forEach(p=>{
+    (D.provincias[p]?.tasks||[]).forEach((t,i)=>rows.push({prov:p,task:t,idx:i}));
+  });
+  if(agFilter==='pendientes') rows = rows.filter(r=>!r.task.done);
+  else if(agFilter!=='todas') rows = rows.filter(r=>r.prov===agFilter);
+  rows.sort((a,b)=>{
+    if(a.task.done!==b.task.done) return a.task.done?1:-1;
+    if(!a.task.due&&!b.task.due) return 0;
+    if(!a.task.due) return 1;
+    if(!b.task.due) return -1;
+    return new Date(a.task.due)-new Date(b.task.due);
+  });
+  const tbody = document.getElementById('ag-tbody');
+  if(!rows.length){ tbody.innerHTML='<tr><td colspan="4"><div class="empty">Sin tareas para mostrar</div></td></tr>'; return; }
+  tbody.innerHTML = rows.map(r=>{
+    const t = r.task;
+    return `<tr>
+      <td style="text-align:center;padding:11px 8px">
+        <div class="task-cb ${t.done?'done':''}" onclick="toggleAgTask('${r.prov}',${r.idx})"></div>
+      </td>
+      <td><span class="${t.done?'done-text':''}" style="font-size:13px">${t.text}</span></td>
+      <td>${ppill(r.prov)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          ${datePill(t.due, t.done)}
+          ${!t.done?`<input type="date" class="date-input" value="${t.due||''}" onchange="setDue('${r.prov}',${r.idx},this.value)" title="Fecha límite">`:'' }
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  updateBadges();
+}
+
+function setAgFilter(v,el){
+  agFilter=v;
+  document.querySelectorAll('.filters .fbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderAgenda();
+}
+
+function toggleAgTask(p,i){
+  D.provincias[p].tasks[i].done = !D.provincias[p].tasks[i].done;
+  renderAgenda();
+  updateBadges();
+}
+
+function setDue(p,i,v){
+  D.provincias[p].tasks[i].due = v;
+  renderAgenda();
+}
+
+// ═══════════════════════════════════════════════════
+// RESUMEN
+// ═══════════════════════════════════════════════════
+function renderResumen(){
+  const activos = PROVS.filter(p=>D.provincias[p]?.status==='activo').length;
+  const done = PROVS.reduce((a,p)=>a+(D.provincias[p]?.tasks||[]).filter(t=>t.done).length,0);
+  const total = PROVS.reduce((a,p)=>a+(D.provincias[p]?.tasks||[]).length,0);
+  document.getElementById('res-stats').innerHTML=`
+    <div class="stat"><div class="stat-label">Provincias activas</div><div class="stat-val">${activos}<span>/${PROVS.length}</span></div></div>
+    <div class="stat"><div class="stat-label">Hitos completados</div><div class="stat-val">${done}<span>/${total}</span></div></div>
+    <div class="stat"><div class="stat-label">Pendientes</div><div class="stat-val">${total-done}</div><div class="stat-sub">entre todas las provincias</div></div>
+    <div class="stat"><div class="stat-label">Registros</div><div class="stat-val">${D.entries.length}</div><div class="stat-sub">reuniones y notas</div></div>
+  `;
+  document.getElementById('res-cards').innerHTML = PROVS.map(p=>{
+    const pd=D.provincias[p];
+    const d=(pd.tasks||[]).filter(t=>t.done).length;
+    const tot=(pd.tasks||[]).length;
+    const pend=(pd.tasks||[]).filter(t=>!t.done);
+    const kpi=pd.kpi||{};
+    return `<div class="res-card">
+      <div class="res-card-head">
+        <span class="res-pname">${p}</span>
+        ${sbadge(pd.status)}
+      </div>
+      ${(kpi.desembolsado||kpi.evaluacion||kpi.diagnosticos)?`
+        <div class="kpi-row" style="margin-bottom:14px">
+          ${kpi.desembolsado?`<div class="kpi"><div class="kpi-label">Desembolsado</div><div class="kpi-val">$${kpi.desembolsado}M</div></div>`:''}
+          ${kpi.evaluacion?`<div class="kpi"><div class="kpi-label">En evaluación</div><div class="kpi-val">$${kpi.evaluacion}M</div></div>`:''}
+          ${kpi.diagnosticos?`<div class="kpi"><div class="kpi-label">Diagnósticos</div><div class="kpi-val">${kpi.diagnosticos}</div></div>`:''}
+        </div>`:''}
+      ${pd.next?`<div class="next-box" style="margin-bottom:14px;font-size:12px">${pd.next}</div>`:''}
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${d}/${tot} hitos completados</div>
+      <div class="res-pending-list">
+        ${pend.slice(0,3).map(t=>`<div class="res-pending-item">${t.text}</div>`).join('')}
+      </div>
+      ${pend.length>3?`<div class="res-more">+ ${pend.length-3} más pendientes</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// PROVINCIAS
+// ═══════════════════════════════════════════════════
+function renderProvincias(){
+  document.getElementById('prov-tabs').innerHTML = PROVS.map(p=>{
+    const d=(D.provincias[p]?.tasks||[]).filter(t=>t.done).length;
+    const tot=(D.provincias[p]?.tasks||[]).length;
+    return `<button class="ptab ${activeProvTab===p?'active':''}" onclick="switchProv('${p}')">${p}<span class="ptab-count">${d}/${tot}</span></button>`;
+  }).join('');
+  renderProvDetail();
+}
+
+function switchProv(p){ activeProvTab=p; renderProvincias(); }
+
+function renderProvDetail(){
+  const p=activeProvTab, pd=D.provincias[p];
+  const entries=D.entries.filter(e=>e.prov===p).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const d=(pd.tasks||[]).filter(t=>t.done).length, tot=(pd.tasks||[]).length;
+  const kpi=pd.kpi||{};
+  document.getElementById('prov-detail').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:19px;font-weight:600">${p}</span>
+        ${sbadge(pd.status)}
+      </div>
+      <button class="btn btn-sm" onclick="openEditProv('${p}')">Editar provincia</button>
+    </div>
+
+    ${(kpi.desembolsado||kpi.evaluacion||kpi.diagnosticos)?`
+      <span class="slabel">Indicadores clave</span>
+      <div class="kpi-row">
+        ${kpi.desembolsado?`<div class="kpi"><div class="kpi-label">Créditos desembolsados</div><div class="kpi-val">$${Number(kpi.desembolsado).toLocaleString('es-AR')}M</div></div>`:''}
+        ${kpi.evaluacion?`<div class="kpi"><div class="kpi-label">En evaluación</div><div class="kpi-val">$${Number(kpi.evaluacion).toLocaleString('es-AR')}M</div></div>`:''}
+        ${kpi.diagnosticos?`<div class="kpi"><div class="kpi-label">Diagnósticos aprobados</div><div class="kpi-val">${kpi.diagnosticos}</div></div>`:''}
+      </div>`:''}
+
+    ${pd.lineasAccion?.length?`
+      <span class="slabel">Líneas de acción</span>
+      <div class="tag-row">${pd.lineasAccion.map(l=>`<span class="tag">${l}</span>`).join('')}</div>`:''}
+
+    ${pd.next?`<span class="slabel">Próximo paso</span><div class="next-box">${pd.next}</div>`:''}
+
+    <span class="slabel">Hitos y tareas (${d}/${tot} completados)</span>
+    <div class="task-list">
+      ${tot?(pd.tasks||[]).map((t,i)=>`
+        <div class="task-row-prov ${t.done?'done-row':''}">
+          <div class="task-cb ${t.done?'done':''}" onclick="toggleProvTask('${p}',${i})"></div>
+          <div style="flex:1">
+            <div class="task-txt ${t.done?'done-text':''}">${t.text}</div>
+            ${!t.done&&t.due?`<div class="task-due-inline">${datePill(t.due,false)}</div>`:''}
+          </div>
+        </div>`).join(''):'<div style="color:var(--text3);font-size:13px;padding:8px 0">Sin tareas registradas.</div>'}
+    </div>
+
+    <div class="divider"></div>
+    <span class="slabel">Historial (${entries.length})</span>
+    <div style="padding:0">
+      ${entries.length?`<div class="timeline">${entries.map((e,i)=>`
+        <div class="tl-item">
+          <div class="tl-left">
+            <div class="tl-dot" style="background:${dotColor(e.type)}"></div>
+            ${i<entries.length-1?'<div class="tl-line"></div>':''}
+          </div>
+          <div class="tl-body">
+            <div class="tl-title">${e.title}</div>
+            <div class="tl-meta">
+              <span class="tl-date">${e.date}</span>
+              <span class="tl-type">${e.type}</span>
+            </div>
+            ${e.notes?`<div class="tl-notes">${e.notes.replace(/\n/g,'<br>')}</div>`:''}
+          </div>
+        </div>`).join('')}</div>`:'<div class="empty">Sin registros para esta provincia.</div>'}
+    </div>
+  `;
+}
+
+function toggleProvTask(p,i){
+  D.provincias[p].tasks[i].done = !D.provincias[p].tasks[i].done;
+  renderProvDetail(); updateBadges();
+}
+
+// ═══════════════════════════════════════════════════
+// HISTORIAL
+// ═══════════════════════════════════════════════════
+function renderHistorial(){
+  let e=[...D.entries];
+  if(histFilter!=='todas') e=e.filter(x=>x.prov===histFilter);
+  e.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const c=document.getElementById('hist-list');
+  if(!e.length){c.innerHTML='<div class="empty">Sin registros.</div>';return;}
+  c.innerHTML=`<div class="timeline">${e.map((x,i)=>`
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot" style="background:${dotColor(x.type)}"></div>
+        ${i<e.length-1?'<div class="tl-line"></div>':''}
+      </div>
+      <div class="tl-body">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="tl-title">${x.title}</span>
+          ${ppill(x.prov)}
+        </div>
+        <div class="tl-meta">
+          <span class="tl-date">${x.date}</span>
+          <span class="tl-type">${x.type}</span>
+        </div>
+        ${x.notes?`<div class="tl-notes">${x.notes.replace(/\n/g,'<br>')}</div>`:''}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function setHistFilter(v,el){
+  histFilter=v;
+  document.querySelectorAll('#hist-filters .fbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderHistorial();
+}
+
+// ═══════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModals(){ document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open')); }
+
+function saveEntry(){
+  const prov=document.getElementById('e-prov').value;
+  const type=document.getElementById('e-type').value;
+  const title=document.getElementById('e-title').value.trim();
+  const notes=document.getElementById('e-notes').value.trim();
+  const date=document.getElementById('e-date').value||new Date().toISOString().split('T')[0];
+  if(!title) return;
+  D.entries.push({prov,type,title,notes,date,id:Date.now()});
+  document.getElementById('e-title').value='';
+  document.getElementById('e-notes').value='';
+  closeModals();
+  updateBadges();
+  const cur=document.querySelector('.page.active').id.replace('page-','');
+  if(cur==='historial') renderHistorial();
+  if(cur==='provincias'&&activeProvTab===prov) renderProvDetail();
+}
+
+function openEditProv(p){
+  const pd=D.provincias[p], kpi=pd.kpi||{};
+  document.getElementById('ep-key').value=p;
+  document.getElementById('ep-modal-title').textContent='Editar: '+p;
+  document.getElementById('ep-status').value=pd.status;
+  document.getElementById('ep-next').value=pd.next||'';
+  document.getElementById('ep-k1').value=kpi.desembolsado||'';
+  document.getElementById('ep-k2').value=kpi.evaluacion||'';
+  document.getElementById('ep-k3').value=kpi.diagnosticos||'';
+  editTasksTmp=JSON.parse(JSON.stringify(pd.tasks||[]));
+  renderEditTasks();
+  openModal('m-edit-prov');
+}
+
+function renderEditTasks(){
+  document.getElementById('ep-task-list').innerHTML=editTasksTmp.map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span style="flex:1;color:${t.done?'var(--text3)':'var(--text)'};text-decoration:${t.done?'line-through':'none'}">${t.text}</span>
+      <button class="btn btn-sm btn-ghost" onclick="removeEditTask(${i})">×</button>
+    </div>`).join('');
+}
+
+function addEditTask(){
+  const inp=document.getElementById('ep-task-in');
+  const txt=inp.value.trim();
+  if(!txt) return;
+  editTasksTmp.push({text:txt,done:false,due:''});
+  inp.value='';
+  renderEditTasks();
+}
+
+function removeEditTask(i){ editTasksTmp.splice(i,1); renderEditTasks(); }
+
+function saveProvEdit(){
+  const p=document.getElementById('ep-key').value;
+  D.provincias[p].status=document.getElementById('ep-status').value;
+  D.provincias[p].next=document.getElementById('ep-next').value.trim();
+  D.provincias[p].tasks=editTasksTmp;
+  const d=document.getElementById('ep-k1').value;
+  const ev=document.getElementById('ep-k2').value;
+  const dg=document.getElementById('ep-k3').value;
+  D.provincias[p].kpi={...(d?{desembolsado:+d}:{}),...(ev?{evaluacion:+ev}:{}),...(dg?{diagnosticos:+dg}:{})};
+  closeModals(); updateBadges(); renderProvincias();
+}
+
+// ═══════════════════════════════════════════════════
+// XLSX IMPORT
+// ═══════════════════════════════════════════════════
+function triggerImport(){ document.getElementById('xlsx-input').click(); }
+
+function handleXlsxImport(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      let updated=0;
+
+      // Provincias sheet
+      if(wb.SheetNames.includes('Provincias')){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets['Provincias']);
+        rows.forEach(r=>{
+          const p=String(r.Provincia||'').trim();
+          if(!p||!D.provincias[p]) return;
+          if(r.Estado) D.provincias[p].status=String(r.Estado).trim();
+          if(r.ProximoPaso) D.provincias[p].next=String(r.ProximoPaso).trim();
+          const kpi={};
+          if(r.Desembolsado&&+r.Desembolsado>0) kpi.desembolsado=+r.Desembolsado;
+          if(r.Evaluacion&&+r.Evaluacion>0) kpi.evaluacion=+r.Evaluacion;
+          if(r.Diagnosticos&&+r.Diagnosticos>0) kpi.diagnosticos=+r.Diagnosticos;
+          if(Object.keys(kpi).length) D.provincias[p].kpi={...D.provincias[p].kpi,...kpi};
+          if(r.LineasAccion){
+            const ls=String(r.LineasAccion).split(',').map(x=>x.trim()).filter(Boolean);
+            if(ls.length) D.provincias[p].lineasAccion=[...new Set([...(D.provincias[p].lineasAccion||[]),...ls])];
+          }
+          updated++;
+        });
+      }
+
+      // Tareas sheet — merge, don't duplicate
+      if(wb.SheetNames.includes('Tareas')){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets['Tareas']);
+        rows.forEach(r=>{
+          const p=String(r.Provincia||'').trim();
+          const txt=String(r.Tarea||'').trim();
+          if(!p||!txt||!D.provincias[p]) return;
+          const exists=D.provincias[p].tasks.some(t=>t.text===txt);
+          if(!exists){
+            let due='';
+            if(r.FechaLimite){
+              try{ due=new Date(r.FechaLimite).toISOString().split('T')[0]; }catch(e){}
+            }
+            D.provincias[p].tasks.push({
+              text:txt,
+              done:String(r.Completado||'').trim().toUpperCase()==='SI',
+              due
+            });
+          } else {
+            // update done status
+            const idx=D.provincias[p].tasks.findIndex(t=>t.text===txt);
+            if(idx>=0) D.provincias[p].tasks[idx].done=String(r.Completado||'').trim().toUpperCase()==='SI';
+          }
+        });
+      }
+
+      // Historia sheet — merge new entries
+      if(wb.SheetNames.includes('Historia')){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets['Historia']);
+        rows.forEach((r,i)=>{
+          const prov=String(r.Provincia||'').trim();
+          const title=String(r.Titulo||'').trim();
+          if(!prov||!title) return;
+          const exists=D.entries.some(e=>e.prov===prov&&e.title===title);
+          if(!exists){
+            let date='';
+            if(r.Fecha){ try{ date=new Date(r.Fecha).toISOString().split('T')[0]; }catch(e){} }
+            D.entries.push({
+              prov,
+              type:String(r.Tipo||'nota').trim(),
+              title,
+              notes:String(r.Notas||'').trim(),
+              date,
+              id:Date.now()+i
+            });
+          }
+        });
+      }
+
+      alert(`✓ Excel importado correctamente. ${updated} provincias actualizadas.`);
+      updateBadges();
+      renderAgenda();
+    } catch(err){
+      alert('Error al leer el archivo: '+err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  e.target.value='';
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT HTML (with embedded data)
+// ═══════════════════════════════════════════════════
+function exportHTML(){
+  const inject=`<script>window.__DATA__=${JSON.stringify(D)};<\/script>`;
+  let src=document.documentElement.outerHTML;
+  src=src.replace('let D = defaultData();','let D = window.__DATA__ || defaultData();');
+  src=src.replace('</head>',inject+'\n</head>');
+  const blob=new Blob([src],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='agenda-provincias.html';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+document.getElementById('e-date').value=new Date().toISOString().split('T')[0];
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) closeModals(); });
+});
+updateBadges();
+renderAgenda();
+</script>
+</body>
+</html>
