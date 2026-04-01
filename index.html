@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agenda Provincias — Programa Riego</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&amp;family=Instrument+Serif:ital@0;1&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
 #lock-screen{position:fixed;inset:0;z-index:9999;background:#f7f5f0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif}
 #lock-screen.hidden{display:none}
@@ -127,6 +125,8 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
 .pp-RioNegro{background:#e8fbf0;color:#1a6c3a;border-color:#c5f0d6}
 .pp-Formosa{background:#fbf5e8;color:#6c4a1a;border-color:#f0e0c5}
 .pp-SanLuis{background:#f3e8fb;color:#4a1a6c;border-color:#dcc5f0}
+.pp-EntreRios{background:#e8f7fb;color:#1a4a6c;border-color:#c5e0f0}
+.pp-Transversal{background:#f0f0f0;color:#444;border-color:#ccc}
 
 /* ── FILTERS ── */
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
@@ -212,16 +212,17 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
 .divider{height:1px;background:var(--border);margin:20px 0}
 .empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:13px}
 </style>
+<script>window.__DATA__={"provincias":{"Mendoza":{"status":"activo","next":"Reunión de seguimiento","kpi":{"desembolsado":600,"evaluacion":1562,"diagnosticos":7},"creditos":{"desembolsado":600,"enProceso":1562},"lineasAccion":["Capacitación a medianos productores"],"tasks":[{"text":"Capacitaciones presenciales","done":false,"due":"2026-07-15"}]},"La Rioja":{"status":"activo","next":"Avanzar en implementación de líneas de acción. Reunión pendiente de Producción y agua.","kpi":{},"creditos":{"desembolsado":0,"enProceso":0},"lineasAccion":["Capacitación a pequeños productores","Capacitación y fortalecimiento de consorcios de riego","Capacitación a productores medianos tecnificados","Formación de técnicos diagnosticadores"],"tasks":[{"text":"Implementar capacitación a pequeños productores","done":false,"due":"2026-08-01"}]},"Río Negro":{"status":"activo","next":"Segunda jornada AT el 27/04","kpi":{},"creditos":{"desembolsado":0,"enProceso":0},"lineasAccion":["Lanzamiento Programa"],"tasks":[{"text":"Lanzamiento Programa","done":true,"due":"2026-03-20"},{"text":"Armar cronograma del taller 9/4","done":true,"due":"2026-03-31"}]},"Formosa":{"status":"activo","next":"Definir fecha del taller inicial","kpi":{},"creditos":{"desembolsado":0,"enProceso":0},"lineasAccion":["Reunión con Ricardo pendiente"],"tasks":[{"text":"Reunión con Ricardo Velazco - confirmar fecha","done":false,"due":"2026-04-13"}]},"San Luis":{"status":"activo","next":"Reunión con Gustavo del Bosco - pendiente lunes 6/4","kpi":{},"creditos":{"desembolsado":0,"enProceso":0},"lineasAccion":["Evaluación de pasos para avanzar con taller de inicio","Evaluación pasos para avanzar con taller de inicio"],"tasks":[{"text":"Evaluar información del plan maestro","done":true,"due":"2026-03-10"},{"text":"Reunión con Gustavo del Bosco - pasos a seguir","done":true,"due":"2026-03-31"}]},"Entre Ríos":{"status":"pendiente","next":"Provincia debe comunicarse luego de recopilar información para avanzar.","kpi":{},"creditos":{"desembolsado":0,"enProceso":0},"lineasAccion":["Presentación realizada — esperando respuesta"],"tasks":[{"text":"Presentación a Guillermo Gorskin (22/12)","done":true,"due":""},{"text":"Presentación presencial a Marcelo Wechsler en Bs As (19/01)","done":true,"due":""},{"text":"Seguimiento con Guillermo Gorskin","done":false,"due":""}]}},"entries":[{"prov":"Mendoza","type":"avance","date":"2025-03-27","title":"Actualización general de avance","notes":"Capacitaciones presenciales en Malargüe y Tunuyán confirmadas para Abril.\nCambio de estrategia crediticia hacia medianos y grandes productores.\n7 diagnósticos aprobados, resto en proceso.\nCréditos desembolsados: $600 — Créditos en evaluación: $1.562.","id":1001},{"prov":"Río Negro","type":"avance","date":"2025-03-27","title":"Actualización general de avance","notes":"Lanzamiento del Programa segunda quincena de marzo.\nReunión 20/03 realizada.","id":1002},{"prov":"San Luis","type":"avance","date":"2025-03-27","title":"Actualización general de avance","notes":"Evaluación del plan maestro completada.\nPresentación del Programa realizada el 12/03.","id":1003},{"prov":"Formosa","type":"reunion","date":"2025-03-04","title":"Reunión con Ricardo Velazco y Nazareno García (Subsecretario)","notes":"Se presentó el Programa.\nQuedaron en evaluar cómo encarar el programa para poner fecha al taller inicial.","id":1004},{"prov":"Formosa","type":"seguimiento","date":"2025-03-27","title":"Contacto con Ricardo — reunión de seguimiento solicitada","notes":"Se contactó a Ricardo Velazco.","id":1005},{"prov":"La Rioja","type":"reunion","date":"2025-02-06","title":"Presentación del Programa","notes":"Participaron Min. Producción, Min. Agua y Energía, Min. Trabajo, INTA.\nSe repasó el Plan Maestro de Recursos Hídricos.","id":1006},{"prov":"La Rioja","type":"reunion","date":"2025-03-17","title":"Taller de inicio","notes":"Participaron: CFI, Ministerio de Producción y Ambiente, Ministerio de Agua y Energía.\n\nLíneas de acción priorizadas:\n— Capacitación a pequeños productores\n— Capacitación y fortalecimiento de consorcios de riego\n— Capacitación a productores medianos tecnificados\n— Formación de técnicos diagnosticadores","id":1007},{"prov":"Río Negro","type":"llamada","date":"2025-03-20","title":"Reunión con Min. Producción","notes":"Se presentaron los planes principales del programa.","id":1008},{"prov":"San Luis","type":"avance","date":"2025-03-12","title":"Presentación del programa","notes":"Reunión solicitada para próximos pasos.","id":1009},{"prov":"Entre Ríos","type":"reunion","date":"2025-12-22","title":"Presentación del programa a Guillermo Gorskin","notes":"Se presentó el programa. Se envió la presentación por WhatsApp.","id":1010},{"prov":"Entre Ríos","type":"reunion","date":"2026-01-19","title":"Presentación presencial en Buenos Aires","notes":"Presentación presencial a Marcelo Wechsler. Llamada a Guillermo Gorskin. Presentes por CFI: Valeria y Lucas. La provincia queda en comunicarse luego de recopilar información.","id":1011},{"prov":"Transversal","type":"avance","date":"2026-03-01","title":"Plataforma de capacitación definida (Classroom)","notes":"Módulo de capacitación para productores en estructuración presupuestaria. Módulo de formación de diagnosticadores definido, a la espera de aprobación presupuestaria. Evaluación de convenio INTA-CFI.","id":1012},{"prov":"Transversal","type":"avance","date":"2026-03-01","title":"Organización documentación para página web CFI","notes":"Comunicación: organización en conjunto para el armado de documentación para página web CFI.","id":1013},{"prov":"Formosa","type":"seguimiento","title":"Contacto con Ricardo","notes":"Pendiente de confirmar la próxima reunión.","date":"2026-03-27","id":1775049850882},{"prov":"San Luis","type":"reunión","title":"Reunión con Gustavo del Bosco","notes":"Se baraja hacer el taller inicial el 6 de mayo con una recorrida.","date":"2026-03-31","id":1775049850884},{"prov":"Río Negro","type":"reunión","title":"Cronograma del taller 9/4","notes":"Se confirmaron las empresas participantes.","date":"2026-03-31","id":1775049850885}]};</script>
 </head>
 <body>
 
 <!-- LOCK SCREEN -->
-<div id="lock-screen">
+<div id="lock-screen" class="hidden">
   <div class="lock-box">
     <div class="lock-mark">Riego</div>
     <div class="lock-sub">Agenda de provincias</div>
     <label class="lock-label">Contraseña</label>
-    <input class="lock-input" type="password" id="lock-input" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" onkeydown="if(event.key==='Enter')checkPassword()">
+    <input class="lock-input" type="password" id="lock-input" placeholder="●●●●●●" onkeydown="if(event.key==='Enter')checkPassword()">
     <button class="lock-btn" onclick="checkPassword()">Ingresar</button>
     <div class="lock-error" id="lock-error">Contraseña incorrecta</div>
   </div>
@@ -237,42 +238,42 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
   <div class="sb-nav">
     <div class="sb-section">Vistas</div>
     <div class="sb-item active" onclick="showPage('agenda',this)">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 11h4"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"></rect><path d="M5 8h6M5 11h4"></path></svg>
       Agenda
-      <span class="sb-badge red" id="badge-agenda">0</span>
+      <span class="sb-badge red" id="badge-agenda">4</span>
     </div>
     <div class="sb-item" onclick="showPage('resumen',this)">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"></circle><path d="M8 5v3l2 2"></path></svg>
       Resumen general
     </div>
     <div class="sb-item" onclick="showPage('provincias',this)">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="5" height="7" rx="1"/><rect x="9" y="2" width="5" height="12" rx="1"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="5" height="7" rx="1"></rect><rect x="9" y="2" width="5" height="12" rx="1"></rect></svg>
       Provincias
       <span class="sb-badge" id="badge-prov">5</span>
     </div>
     <div class="sb-item" onclick="showPage('creditos',this)">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="2"/><path d="M1 7h14"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="2"></rect><path d="M1 7h14"></path></svg>
       Créditos
     </div>
     <div class="sb-item" onclick="showPage('historial',this)">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v4l2.5 2.5M2.5 8a5.5 5.5 0 1 0 11 0 5.5 5.5 0 0 0-11 0z"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4v4l2.5 2.5M2.5 8a5.5 5.5 0 1 0 11 0 5.5 5.5 0 0 0-11 0z"></path></svg>
       Historial
     </div>
     <div class="sb-section">Acciones</div>
     <div class="sb-item" onclick="openModal('m-entrada')">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"></path></svg>
       Nueva entrada
     </div>
     <div class="sb-item" onclick="triggerImport()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8m-3-3 3 3 3-3M3 12h10"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8m-3-3 3 3 3-3M3 12h10"></path></svg>
       Importar Excel
     </div>
     <div class="sb-item" onclick="exportHTML()">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10v3h10v-3M8 2v8m-3-3 3 3 3-3"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 10v3h10v-3M8 2v8m-3-3 3 3 3-3"></path></svg>
       Exportar HTML
     </div>
   </div>
-  <div class="sb-footer" id="sb-footer">Panel de seguimiento</div>
+  <div class="sb-footer" id="sb-footer">Actualizado: 01/04/2026, 10:24 a.&nbsp;m.</div>
 </nav>
 
 <main class="main">
@@ -282,7 +283,7 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
     <div class="ph">
       <div><div class="ph-title">Agenda y próximos pasos</div><div class="ph-sub">Tareas pendientes de todas las provincias, ordenadas por fecha límite</div></div>
       <button class="btn btn-green" onclick="openModal('m-entrada')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"></path></svg>
         Nueva entrada
       </button>
     </div>
@@ -294,6 +295,7 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
       <button class="fbtn" onclick="setAgFilter('Río Negro',this)">Río Negro</button>
       <button class="fbtn" onclick="setAgFilter('Formosa',this)">Formosa</button>
       <button class="fbtn" onclick="setAgFilter('San Luis',this)">San Luis</button>
+      <button class="fbtn" onclick="setAgFilter('Entre Ríos',this)">Entre Ríos</button>
       <button class="fbtn" onclick="setAgFilter('pendientes',this)" style="margin-left:6px">Solo pendientes</button>
     </div>
     <div class="card-flush">
@@ -304,7 +306,87 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
           <th style="width:130px">Provincia</th>
           <th style="width:160px">Fecha límite</th>
         </tr></thead>
-        <tbody id="ag-tbody"></tbody>
+        <tbody id="ag-tbody"><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb " onclick="toggleAgTask('Formosa',0)"></div></td>
+      <td><span class="" style="font-size:13px">Reunión con Ricardo Velazco - confirmar fecha</span></td>
+      <td><span class="ppill pp-Formosa">Formosa</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="date-pill date-ok">13/04/26</span>
+        <input type="date" class="date-input" value="2026-04-13" onchange="setDue('Formosa',0,this.value)" title="Fecha límite">
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb " onclick="toggleAgTask('Mendoza',0)"></div></td>
+      <td><span class="" style="font-size:13px">Capacitaciones presenciales</span></td>
+      <td><span class="ppill pp-Mendoza">Mendoza</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="date-pill date-ok">15/07/26</span>
+        <input type="date" class="date-input" value="2026-07-15" onchange="setDue('Mendoza',0,this.value)" title="Fecha límite">
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb " onclick="toggleAgTask('La Rioja',0)"></div></td>
+      <td><span class="" style="font-size:13px">Implementar capacitación a pequeños productores</span></td>
+      <td><span class="ppill pp-LaRioja">La Rioja</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="date-pill date-ok">01/08/26</span>
+        <input type="date" class="date-input" value="2026-08-01" onchange="setDue('La Rioja',0,this.value)" title="Fecha límite">
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb " onclick="toggleAgTask('Entre Ríos',2)"></div></td>
+      <td><span class="" style="font-size:13px">Seguimiento con Guillermo Gorskin</span></td>
+      <td><span class="ppill pp-EntreRios">Entre Ríos</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span class="date-none">Sin fecha</span>
+        <input type="date" class="date-input" value="" onchange="setDue('Entre Ríos',2,this.value)" title="Fecha límite">
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('San Luis',0)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Evaluar información del plan maestro</span></td>
+      <td><span class="ppill pp-SanLuis">San Luis</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('Río Negro',0)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Lanzamiento Programa</span></td>
+      <td><span class="ppill pp-RioNegro">Río Negro</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('Río Negro',1)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Armar cronograma del taller 9/4</span></td>
+      <td><span class="ppill pp-RioNegro">Río Negro</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('San Luis',1)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Reunión con Gustavo del Bosco - pasos a seguir</span></td>
+      <td><span class="ppill pp-SanLuis">San Luis</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('Entre Ríos',0)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Presentación a Guillermo Gorskin (22/12)</span></td>
+      <td><span class="ppill pp-EntreRios">Entre Ríos</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr><tr>
+      <td style="text-align:center;padding:11px 8px"><div class="task-cb done" onclick="toggleAgTask('Entre Ríos',1)"></div></td>
+      <td><span class="done-text" style="font-size:13px">Presentación presencial a Marcelo Wechsler en Bs As (19/01)</span></td>
+      <td><span class="ppill pp-EntreRios">Entre Ríos</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:var(--text3);font-size:11px">Completado</span>
+        
+      </div></td>
+    </tr></tbody>
       </table>
     </div>
   </div>
@@ -321,7 +403,7 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
     <div class="ph">
       <div><div class="ph-title">Provincias</div><div class="ph-sub">Detalle completo por provincia</div></div>
       <button class="btn btn-green" onclick="openModal('m-entrada')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"></path></svg>
         Registrar
       </button>
     </div>
@@ -336,12 +418,14 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
     <div class="credits-grid" id="cred-cards"></div>
   </div>
 
+
+
   <!-- ══ HISTORIAL ══ -->
   <div class="page" id="page-historial">
     <div class="ph">
       <div><div class="ph-title">Historial de actividad</div><div class="ph-sub">Reuniones, llamadas y notas registradas</div></div>
       <button class="btn btn-green" onclick="openModal('m-entrada')">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"/></svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v8M2 6h8"></path></svg>
         Registrar
       </button>
     </div>
@@ -353,6 +437,8 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
       <button class="fbtn" onclick="setHistFilter('Río Negro',this)">Río Negro</button>
       <button class="fbtn" onclick="setHistFilter('Formosa',this)">Formosa</button>
       <button class="fbtn" onclick="setHistFilter('San Luis',this)">San Luis</button>
+      <button class="fbtn" onclick="setHistFilter('Entre Ríos',this)">Entre Ríos</button>
+      <button class="fbtn" onclick="setHistFilter('Transversal',this)">Transversal</button>
     </div>
     <div class="card" id="hist-list" style="padding:0 22px"></div>
   </div>
@@ -412,7 +498,7 @@ body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--t
 // ═══════════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════════
-const PROVS = ['Mendoza','La Rioja','Río Negro','Formosa','San Luis'];
+const PROVS = ['Mendoza','La Rioja','Río Negro','Formosa','San Luis','Entre Ríos'];
 
 function defaultData(){
   return {
@@ -421,7 +507,8 @@ function defaultData(){
       'La Rioja':{status:'activo',next:'Avanzar en implementación de las líneas de acción priorizadas en el taller del 17/3.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:['Capacitación a pequeños productores','Capacitación y fortalecimiento de consorcios de riego','Capacitación a productores medianos tecnificados','Formación de técnicos diagnosticadores'],tasks:[{text:'06/02 — Presentación del Programa',done:true,due:''},{text:'17/03 — Taller de inicio',done:true,due:''},{text:'Implementar: capacitación a pequeños productores',done:false,due:''},{text:'Implementar: capacitación y fortalecimiento de consorcios de riego',done:false,due:''},{text:'Implementar: capacitación a productores medianos tecnificados',done:false,due:''},{text:'Implementar: formación de técnicos diagnosticadores',done:false,due:''}]},
       'Río Negro':{status:'activo',next:'Segunda jornada AT semana 27/04 — Riego Gravitacional, Villa Regina.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:[],tasks:[{text:'Lanzamiento Programa segunda quincena marzo',done:true,due:''},{text:'Reunión viernes 20/03',done:true,due:''},{text:'1ª jornada AT — Riego Presurizado, Guardia Mitre',done:false,due:''},{text:'2ª jornada AT — Riego Gravitacional, Villa Regina',done:false,due:''},{text:'3ª jornada AT — Riego Gravitacional, Conesa',done:false,due:''}]},
       'Formosa':{status:'activo',next:'Reunión con Ricardo Velazco — definir cómo continuar y fecha del taller inicial.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:[],tasks:[{text:'Reunión 04/03 con Ricardo Velazco y Nazareno García',done:true,due:''},{text:'Contacto con Ricardo — reunión de seguimiento solicitada',done:true,due:''},{text:'Reunión de seguimiento con Ricardo Velazco',done:false,due:''},{text:'Definir fecha del taller inicial',done:false,due:''}]},
-      'San Luis':{status:'activo',next:'Confirmar reunión con Gustavo del Bosco para avanzar con el programa.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:['Evaluación de pasos para avanzar con taller de inicio'],tasks:[{text:'Evaluar información del plan maestro de agua de la provincia',done:true,due:''},{text:'Presentación del Programa 12/03',done:true,due:''},{text:'Reunión con Gustavo del Bosco para avanzar con el programa',done:false,due:''}]}
+      'San Luis':{status:'activo',next:'Confirmar reunión con Gustavo del Bosco para avanzar con el programa.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:['Evaluación de pasos para avanzar con taller de inicio'],tasks:[{text:'Evaluar información del plan maestro de agua de la provincia',done:true,due:''},{text:'Presentación del Programa 12/03',done:true,due:''},{text:'Reunión con Gustavo del Bosco para avanzar con el programa',done:false,due:''}]},
+      'Entre Ríos':{status:'pendiente',next:'Provincia debe comunicarse luego de recopilar información para avanzar.',kpi:{},creditos:{desembolsado:0,enProceso:0},lineasAccion:['Presentación realizada — esperando respuesta'],tasks:[{text:'Presentación a Guillermo Gorskin (22/12)',done:true,due:''},{text:'Presentación presencial a Marcelo Wechsler en Bs As (19/01)',done:true,due:''},{text:'Seguimiento con Guillermo Gorskin',done:false,due:''}]}
     },
     entries:[
       {prov:'Mendoza',type:'avance',date:'2025-03-27',title:'Actualización general de avance',notes:'Capacitaciones presenciales en Malargüe y Tunuyán confirmadas para Abril.\nCambio de estrategia crediticia hacia medianos y grandes productores.\n7 diagnósticos aprobados, resto en proceso.\nCréditos desembolsados: $600 — Créditos en evaluación: $1.562.',id:1001},
@@ -432,7 +519,11 @@ function defaultData(){
       {prov:'La Rioja',type:'reunion',date:'2025-02-06',title:'Presentación del Programa',notes:'Participaron Min. Producción, Min. Agua y Energía, Min. Trabajo, INTA.\nSe repasó el Plan Maestro de Recursos Hídricos.',id:1006},
       {prov:'La Rioja',type:'reunion',date:'2025-03-17',title:'Taller de inicio',notes:'Participaron: CFI, Ministerio de Producción y Ambiente, Ministerio de Agua y Energía.\n\nLíneas de acción priorizadas:\n— Capacitación a pequeños productores\n— Capacitación y fortalecimiento de consorcios de riego\n— Capacitación a productores medianos tecnificados\n— Formación de técnicos diagnosticadores',id:1007},
       {prov:'Río Negro',type:'llamada',date:'2025-03-20',title:'Reunión con Min. Producción',notes:'Se presentaron los planes principales del programa.',id:1008},
-      {prov:'San Luis',type:'avance',date:'2025-03-12',title:'Presentación del programa',notes:'Reunión solicitada para próximos pasos.',id:1009}
+      {prov:'San Luis',type:'avance',date:'2025-03-12',title:'Presentación del programa',notes:'Reunión solicitada para próximos pasos.',id:1009},
+      {prov:'Entre Ríos',type:'reunion',date:'2025-12-22',title:'Presentación del programa a Guillermo Gorskin',notes:'Se presentó el programa. Se envió la presentación por WhatsApp.',id:1010},
+      {prov:'Entre Ríos',type:'reunion',date:'2026-01-19',title:'Presentación presencial en Buenos Aires',notes:'Presentación presencial a Marcelo Wechsler. Llamada a Guillermo Gorskin. Presentes por CFI: Valeria y Lucas. La provincia queda en comunicarse luego de recopilar información.',id:1011},
+      {prov:'Transversal',type:'avance',date:'2026-03-01',title:'Plataforma de capacitación definida (Classroom)',notes:'Módulo de capacitación para productores en estructuración presupuestaria. Módulo de formación de diagnosticadores definido, a la espera de aprobación presupuestaria. Evaluación de convenio INTA-CFI.',id:1012},
+      {prov:'Transversal',type:'avance',date:'2026-03-01',title:'Organización documentación para página web CFI',notes:'Comunicación: organización en conjunto para el armado de documentación para página web CFI.',id:1013}
     ]
   };
 }
@@ -885,6 +976,8 @@ function handleXlsxImport(e){
   e.target.value='';
 }
 
+
+
 // ═══════════════════════════════════════════════════
 // EXPORT HTML
 // ═══════════════════════════════════════════════════
@@ -919,5 +1012,6 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{ m.addEventListener('cli
 updateBadges();
 renderAgenda();
 </script>
-</body>
-</html>
+
+
+</body></html>
