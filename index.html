@@ -1,0 +1,390 @@
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa Riego — Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300;1,9..144,600&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:     #0e1a14;
+  --bg2:    #142010;
+  --card:   #172518;
+  --card2:  #1d2e1e;
+  --border: rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.13);
+  --text:   #e8ede9;
+  --text2:  #8fa892;
+  --text3:  #536b57;
+  --green:  #4caf78;
+  --green-d:#2d6644;
+  --green-l:rgba(76,175,120,.12);
+  --amber:  #d4a056;
+  --amber-l:rgba(212,160,86,.1);
+  --mono:   'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+
+/* LOCK */
+#lock{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
+#lock.out{opacity:0;pointer-events:none}
+.lw{width:min(340px,88vw);text-align:center}
+.l-eye{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.l-title{font-family:'Fraunces',serif;font-weight:300;font-size:44px;color:var(--text);letter-spacing:-.03em;line-height:1;margin-bottom:4px}
+.l-title em{font-style:italic;color:var(--green)}
+.l-sub{font-size:12px;color:var(--text3);margin-bottom:48px}
+.l-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);padding:11px 0;font-size:15px;color:var(--text);font-family:var(--mono);text-align:center;letter-spacing:.2em;outline:none;transition:border-color .2s}
+.l-input:focus{border-bottom-color:var(--green)}
+.l-input::placeholder{color:var(--text3);letter-spacing:.08em;font-size:13px}
+.l-btn{width:100%;margin-top:24px;padding:13px;background:var(--green-l);border:1px solid var(--green-d);color:var(--green);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.l-btn:hover{background:rgba(76,175,120,.22);border-color:var(--green)}
+.l-err{font-size:11px;color:#c0614a;margin-top:14px;min-height:16px}
+
+/* PAGE */
+.page{max-width:1060px;margin:0 auto;padding:44px 36px 80px;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.page.in{opacity:1;transform:translateY(0)}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:24px;border-bottom:1px solid var(--border);margin-bottom:40px;flex-wrap:wrap;gap:14px}
+.t-eye{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.t-title{font-family:'Fraunces',serif;font-weight:300;font-size:36px;color:var(--text);letter-spacing:-.02em;line-height:1.1}
+.t-title em{font-style:italic;color:var(--green)}
+.t-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .12s;font-family:'DM Sans',sans-serif}
+.btn:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.btn-g{border-color:var(--green-d);background:var(--green-l);color:var(--green)}
+.btn-g:hover{background:rgba(76,175,120,.22);border-color:var(--green)}
+
+/* STAT STRIP */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:48px}
+.stat{background:var(--card);padding:22px 24px}
+.stat-lbl{font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.stat-n{font-family:'Fraunces',serif;font-weight:300;font-size:48px;color:var(--text);line-height:1;letter-spacing:-.02em}
+.stat-n b{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:300;color:var(--text3)}
+.stat-s{font-size:11px;color:var(--text3);margin-top:6px}
+.stat-highlight{background:var(--green-l)!important;border-left:2px solid var(--green);}
+.stat-highlight .stat-lbl{color:var(--green)!important;opacity:.8}
+.stat-highlight .stat-n{color:var(--green)!important}
+@media(max-width:680px){.stats{grid-template-columns:1fr 1fr}}
+
+/* SECTION */
+.sec{margin-bottom:48px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sec-lbl{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--border)}
+
+/* PROV GRID */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:10px}
+.pc{background:var(--card);border:1px solid var(--border);padding:22px 24px;position:relative;overflow:hidden;transition:border-color .15s,transform .15s}
+.pc:hover{border-color:var(--border2);transform:translateY(-1px)}
+.pc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;transition:opacity .2s}
+.pc:hover::after{opacity:1}
+.pc.pausa{opacity:.55}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pc-name{font-size:19px;font-weight:500;color:var(--text);letter-spacing:-.01em}
+.pc-badge{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:500;letter-spacing:.07em;text-transform:uppercase}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.d-a{background:var(--green)}.c-a{color:var(--green)}
+.d-p{background:var(--amber)}.c-p{color:var(--amber)}
+.d-x{background:var(--text3)}.c-x{color:var(--text3)}
+.pc-next{font-size:15px;color:var(--text2);line-height:1.65;padding:10px 14px;background:rgba(255,255,255,.025);border-left:1px solid var(--green-d);margin-bottom:16px}
+.pc-next.pausa-txt{border-left-color:var(--text3);color:var(--text3);font-style:italic}
+.pc-prog-meta{display:flex;justify-content:space-between;margin-bottom:6px}
+.pc-prog-meta span{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.pbar{height:2px;background:rgba(255,255,255,.06)}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--green-d),var(--green));transition:width .7s cubic-bezier(.4,0,.2,1)}
+
+/* CRED TABLE */
+.ctable-wrap{background:var(--card);border:1px solid var(--border);overflow:hidden}
+.ctable{width:100%;border-collapse:collapse}
+.ctable thead tr{border-bottom:1px solid var(--border)}
+.ctable th{padding:13px 22px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);text-align:left;background:var(--card2)}
+.ctable th:not(:first-child){text-align:right}
+.ctable td{padding:16px 22px;font-size:15px;color:var(--text2);border-bottom:1px solid var(--border)}
+.ctable tr:last-child td{border-bottom:none}
+.ctable tbody tr:hover td{background:rgba(255,255,255,.02)}
+.ctable td:not(:first-child){text-align:right;font-family:var(--mono);font-size:14px;letter-spacing:.02em}
+.cprov{color:var(--text)!important;font-weight:500}
+.cpos{color:var(--green)!important}
+.ctotal-row td{background:var(--card2)!important;color:var(--text)!important;font-weight:500;border-top:1px solid var(--border2)!important}
+
+/* FOOTER */
+.foot{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text3);font-family:var(--mono)}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:300;background:var(--card2);border:1px solid var(--border2);padding:11px 18px;font-size:12px;color:var(--text);transform:translateY(6px);opacity:0;transition:all .2s ease;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+<script>window.__DATA__={"provincias":{"Mendoza":{"status":"activo","next":"Reunion seguimiento Mendoza. 8/4.","creditos":{"desembolsado":600,"enProceso":1562},"tasks":[{"text":"Capacitaciones presenciales en Malargüe y Tunuyán","done":true,"due":"2026-07-15","notes":"Confirmadas para Abril"},{"text":"Nuevo ciclo de capacitaciones post mitad de año","done":false,"due":"2026-08-01","notes":""},{"text":"Diagnósticos en proceso — completar aprobaciones","done":false,"due":"","notes":"7 aprobados, resto en proceso"},{"text":"Reunión de seguimiento 25/3","done":true,"due":"2026-03-25","notes":""},{"text":"Reunion de seguimiento","done":false,"due":"2026-04-08","notes":"Reunion seguimiento Mendoza. 8/4."}]},"La Rioja":{"status":"activo","next":"Reunion pendiente con referentes para avanzar.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Implementar capacitación a pequeños productores","done":false,"due":"2026-08-01","notes":"Línea priorizada en taller 17/3"},{"text":"Implementar capacitación y fortalecimiento consorcios","done":false,"due":"2026-08-01","notes":""},{"text":"Implementar capacitación a medianos tecnificados","done":false,"due":"2026-08-01","notes":""},{"text":"Implementar formación de técnicos diagnosticadores","done":false,"due":"2026-08-01","notes":""},{"text":"Reunion pendiente","done":false,"due":"2026-04-08","notes":"Reunion pendiente con referentes para avanzar."}]},"Río Negro":{"status":"activo","next":"1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Lanzamiento Programa segunda quincena marzo","done":true,"due":"2026-03-20","notes":""},{"text":"1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4","done":false,"due":"2026-04-06","notes":""}]},"Formosa":{"status":"activo","next":"Pendiente de confirmar fecha. Esperando respuesta de Velazco.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Reunión de seguimiento con Ricardo Velazco","done":false,"due":"2026-04-13","notes":"Pendiente de confirmar fecha. Esperando respuesta de Velazco."},{"text":"Definir fecha del taller inicial","done":false,"due":"","notes":""}]},"San Luis":{"status":"activo","next":"Taller de inicio: Se baraja 6 de mayo con recorrida. A confirmar!","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Evaluar información del plan maestro de agua","done":true,"due":"2026-03-10","notes":""},{"text":"Reunión con Gustavo del Bosco — pasos a seguir","done":true,"due":"2026-03-31","notes":""},{"text":"Taller de inicio","done":false,"due":"2026-05-06","notes":"Taller de inicio: Se baraja 6 de mayo con recorrida. A confirmar!"}]},"Entre Ríos":{"status":"activo","next":"Nuevo interes de la provincia. Gorskin.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Seguimiento con Guillermo Gorskin","done":false,"due":"2026-04-06","notes":"Nuevo interes de la provincia. Gorskin."}]}}};</script>
+<script>window.__DATA__={"provincias":{"Mendoza":{"status":"activo","next":"Reunion seguimiento Mendoza. 8/4. A.T.E, Convenio General y especifico con INTA.","creditos":{"desembolsado":600,"enProceso":1562},"tasks":[{"text":"Capacitaciones presenciales en Malargüe y Tunuyán","done":true,"due":"2026-07-15","notes":"Confirmadas para Abril"},{"text":"Nuevo ciclo de capacitaciones post mitad de año","done":false,"due":"2026-08-01","notes":""},{"text":"Diagnósticos en proceso — completar aprobaciones","done":false,"due":"","notes":"7 aprobados, resto en proceso"},{"text":"Reunión de seguimiento 25/3","done":true,"due":"2026-03-25","notes":""},{"text":"Reunion de seguimiento","done":false,"due":"2026-04-08","notes":"Reunion seguimiento Mendoza. 8/4.AT, convenio general y especifico."},{"text":"Evaluacion de convenios con INTA.","done":false,"due":"2026-04-08","notes":"Reunion seguimiento Mendoza. 8/4. A.T.E, Convenio General y especifico con INTA."}]},"La Rioja":{"status":"activo","next":"Reunion pendiente con referentes para avanzar.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Implementar capacitación a pequeños productores","done":false,"due":"2026-08-01","notes":"Línea priorizada en taller 17/3"},{"text":"Implementar capacitación y fortalecimiento consorcios","done":false,"due":"2026-08-01","notes":""},{"text":"Implementar capacitación a medianos tecnificados","done":false,"due":"2026-08-01","notes":""},{"text":"Implementar formación de técnicos diagnosticadores","done":false,"due":"2026-08-01","notes":""},{"text":"Reunion pendiente","done":false,"due":"2026-04-08","notes":"Reunion pendiente con referentes para avanzar."}]},"Río Negro":{"status":"activo","next":"1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Lanzamiento Programa segunda quincena marzo","done":true,"due":"2026-03-20","notes":""},{"text":"1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4","done":false,"due":"2026-04-06","notes":""}]},"Formosa":{"status":"activo","next":"Pendiente de confirmar fecha. Esperando respuesta de Velazco.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Reunión de seguimiento con Ricardo Velazco","done":false,"due":"2026-04-13","notes":"Pendiente de confirmar fecha. Esperando respuesta de Velazco."},{"text":"Definir fecha del taller inicial","done":false,"due":"","notes":""}]},"San Luis":{"status":"activo","next":"Taller de inicio: Se baraja 6 de mayo con recorrida. A confirmar!","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Evaluar información del plan maestro de agua","done":true,"due":"2026-03-10","notes":""},{"text":"Reunión con Gustavo del Bosco — pasos a seguir","done":true,"due":"2026-03-31","notes":""},{"text":"Taller de inicio","done":false,"due":"2026-05-06","notes":"Taller de inicio: Se baraja 6 de mayo con recorrida. A confirmar!"}]},"Entre Ríos":{"status":"activo","next":"Nuevo interes de la provincia. Gorskin.","creditos":{"desembolsado":0,"enProceso":0},"tasks":[{"text":"Seguimiento con Guillermo Gorskin","done":false,"due":"2026-04-06","notes":"Nuevo interes de la provincia. Gorskin."}]}}};</script>
+</head>
+<body>
+
+<div id="lock" class="out" style="display: none;">
+  <div class="lw">
+    <div class="l-eye">CFI — Argentina</div>
+    <div class="l-title">Programa<br><em>Riego</em></div>
+    <div class="l-sub">Panel de seguimiento</div>
+    <input class="l-input" type="password" id="pw" placeholder="Contraseña de acceso" onkeydown="if(event.key==='Enter')unlock()">
+    <button class="l-btn" onclick="unlock()">Ingresar</button>
+    <div class="l-err" id="pw-err"></div>
+  </div>
+</div>
+
+<div class="page in" id="page" style="display: block;">
+  <div class="topbar">
+    <div>
+      <div class="t-eye">CFI — Programa de Tecnificación del Riego</div>
+      <div class="t-title">Panel de <em>seguimiento</em></div>
+    </div>
+    <div class="t-actions">
+      <button class="btn btn-g" onclick="triggerImport()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v7M3 5l3 3 3-3M1 10h10"></path></svg>
+        Importar Excel
+      </button>
+      <button class="btn" onclick="exportHTML()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 9v2h10V9M6 1v7M3 5l3 3 3-3"></path></svg>
+        Exportar
+      </button>
+    </div>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-lbl">Provincias activas</div><div class="stat-n">6</div></div>
+    <div class="stat"><div class="stat-lbl">Créditos desembolsados</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">$600</div></div>
+    <div class="stat"><div class="stat-lbl">Créditos en estudio</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">$1.562</div></div>
+    <div class="stat stat-highlight"><div class="stat-lbl">Total cartera</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">$2.162</div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-lbl">Estado por provincia</div><div class="sec-line"></div></div>
+    <div class="pgrid" id="pgrid"><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">Mendoza</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">Reunion seguimiento Mendoza. 8/4. A.T.E, Convenio General y especifico con INTA.</div>
+
+    </div><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">La Rioja</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">Reunion pendiente con referentes para avanzar.</div>
+
+    </div><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">Río Negro</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4.</div>
+
+    </div><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">Formosa</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">Pendiente de confirmar fecha. Esperando respuesta de Velazco.</div>
+
+    </div><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">San Luis</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">Taller de inicio: Se baraja 6 de mayo con recorrida. A confirmar!</div>
+
+    </div><div class="pc ">
+      <div class="pc-top">
+        <div class="pc-name">Entre Ríos</div>
+        <div class="pc-badge c-a"><span class="dot d-a"></span>Activo</div>
+      </div>
+      <div class="pc-next ">Nuevo interes de la provincia. Gorskin.</div>
+
+    </div></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-lbl">Créditos por provincia</div><div class="sec-line"></div></div>
+    <div class="ctable-wrap">
+      <table class="ctable">
+        <thead><tr><th>Provincia</th><th>Desembolsado ($)</th><th>En estudio ($)</th><th>Total ($)</th></tr></thead>
+        <tbody id="cbody"><tr><td class="cprov">Mendoza</td><td class="cpos">$600</td><td class="cpos">$1.562</td><td class="cpos">$2.162</td></tr><tr><td class="cprov">La Rioja</td><td class="">$0</td><td class="">$0</td><td class="">$0</td></tr><tr><td class="cprov">Río Negro</td><td class="">$0</td><td class="">$0</td><td class="">$0</td></tr><tr><td class="cprov">Formosa</td><td class="">$0</td><td class="">$0</td><td class="">$0</td></tr><tr><td class="cprov">San Luis</td><td class="">$0</td><td class="">$0</td><td class="">$0</td></tr><tr><td class="cprov">Entre Ríos</td><td class="">$0</td><td class="">$0</td><td class="">$0</td></tr><tr class="ctotal-row"><td class="cprov">Total</td><td class="cpos">$600</td><td class="cpos">$1.562</td><td class="cpos">$2.162</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Programa de Apoyo para la Tecnificación del Riego — CFI</span>
+    <span id="fdate">Actualizado 07/04/2026, 02:00 p.&nbsp;m.</span>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Importado: 12 registros actualizados</div>
+<input type="file" id="xl-in" accept=".xlsx,.xls" style="display:none" onchange="handleImport(event)">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script>
+const PASSWORD='Riego2026';
+function unlock(){
+  if(document.getElementById('pw').value===PASSWORD){
+    const l=document.getElementById('lock');
+    l.classList.add('out');
+    setTimeout(()=>l.style.display='none',400);
+    sessionStorage.setItem('rp','1');
+    boot();
+  } else {
+    const e=document.getElementById('pw-err');
+    e.textContent='Contraseña incorrecta';
+    document.getElementById('pw').value='';
+    setTimeout(()=>e.textContent='',2500);
+  }
+}
+document.getElementById('pw').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
+if(sessionStorage.getItem('rp')==='1'){document.getElementById('lock').style.display='none';boot();}
+
+const PROVS=['Mendoza','La Rioja','Río Negro','Formosa','San Luis','Entre Ríos'];
+function defaultData(){return{provincias:{
+  'Mendoza':{status:'activo',next:'Reunión de seguimiento Mendoza. 8/4.',creditos:{desembolsado:600,enProceso:0},tasks:[{text:'Capacitaciones presenciales Malargüe y Tunuyán',done:true},{text:'Cambio de estrategia crediticia a medianos y grandes',done:true},{text:'Nuevo ciclo de capacitaciones post mitad de año',done:false},{text:'Diagnósticos en proceso',done:false},{text:'Reunión de seguimiento 25/3',done:false}]},
+  'La Rioja':{status:'activo',next:'Reunión pendiente con referentes para avanzar.',creditos:{desembolsado:0,enProceso:0},tasks:[{text:'Presentación del Programa 06/02',done:true},{text:'Taller de inicio 17/03',done:true},{text:'Implementar: capacitación pequeños productores',done:false},{text:'Implementar: capacitación consorcios de riego',done:false},{text:'Implementar: medianos tecnificados',done:false},{text:'Implementar: formación diagnosticadores',done:false}]},
+  'Río Negro':{status:'activo',next:'1ª jornada AT — Riego Presurizado, Guardia Mitre 23/4.',creditos:{desembolsado:0,enProceso:0},tasks:[{text:'Lanzamiento Programa',done:true},{text:'Reunión viernes 20/03',done:true},{text:'1ª jornada AT — Riego Presurizado, Guardia Mitre',done:true},{text:'2ª jornada AT — Riego Gravitacional, Villa Regina',done:false},{text:'3ª jornada AT — Riego Gravitacional, Conesa',done:false}]},
+  'Formosa':{status:'activo',next:'Pendiente de confirmar fecha. Esperando respuesta de Velazco.',creditos:{desembolsado:0,enProceso:0},tasks:[{text:'Reunión 04/03 con Ricardo Velazco y Subsecretario',done:true},{text:'Contacto de seguimiento con Ricardo',done:true},{text:'Reunión de seguimiento con Ricardo Velazco',done:false},{text:'Definir fecha del taller inicial',done:false}]},
+  'San Luis':{status:'activo',next:'Taller de inicio: Se baraja 6 de mayo con recorrida. ¡A confirmar!',creditos:{desembolsado:0,enProceso:0},tasks:[{text:'Evaluar información del plan maestro de agua',done:true},{text:'Presentación del Programa 12/03',done:true},{text:'Reunión con Gustavo del Bosco',done:true},{text:'Taller de inicio',done:false}]},
+  'Entre Ríos':{status:'activo',next:'Nuevo interés de la provincia. Gorskin.',creditos:{desembolsado:0,enProceso:0},tasks:[{text:'Presentación a Guillermo Gorskin (22/12)',done:true},{text:'Presentación presencial en Bs As (19/01)',done:true},{text:'Seguimiento con Guillermo Gorskin',done:false}]}
+}};}
+let D=window.__DATA__||defaultData();
+
+function fmt$(v){if(!v&&v!==0)return'—';return'$'+Number(v).toLocaleString('es-AR');}
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\s\/\(\)\$\-\.]/g,'');}
+function parseVal(v){if(v===null||v===undefined||v==='')return 0;if(typeof v==='number')return v;return parseFloat(String(v).replace(/[$\s]/g,'').replace(/\./g,'').replace(',','.'))||0;}
+function parseXlDate(v){if(!v&&v!==0)return'';if(v instanceof Date){if(isNaN(v))return'';return v.getFullYear()+'-'+String(v.getMonth()+1).padStart(2,'0')+'-'+String(v.getDate()).padStart(2,'0');}if(typeof v==='number'){const d=new Date(Math.round((v-25569)*86400*1000));return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0');}const s=String(v).trim();if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);const m=/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/.exec(s);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');return'';}
+function toast(msg,dur=3200){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+function boot(){
+  const p=document.getElementById('page');
+  p.style.display='block';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>p.classList.add('in')));
+  render();
+}
+
+function render(){
+  document.getElementById('fdate').textContent='Actualizado '+new Date().toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  const activos=PROVS.filter(p=>D.provincias[p]?.status==='activo').length;
+  const done=PROVS.reduce((a,p)=>a+(D.provincias[p]?.tasks||[]).filter(t=>t.done).length,0);
+  const total=PROVS.reduce((a,p)=>a+(D.provincias[p]?.tasks||[]).length,0);
+  const pct=total?Math.round(done/total*100):0;
+  const totD=PROVS.reduce((a,p)=>a+(D.provincias[p]?.creditos?.desembolsado||0),0);
+  const totE=PROVS.reduce((a,p)=>a+(D.provincias[p]?.creditos?.enProceso||0),0);
+
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-lbl">Provincias activas</div><div class="stat-n">${activos}</div></div>
+    <div class="stat"><div class="stat-lbl">Créditos desembolsados</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">${fmt$(totD)}</div></div>
+    <div class="stat"><div class="stat-lbl">Créditos en estudio</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">${fmt$(totE)}</div></div>
+    <div class="stat stat-highlight"><div class="stat-lbl">Total cartera</div><div class="stat-n" style="font-size:26px;font-family:var(--mono);margin-top:6px">${fmt$(totD+totE)}</div></div>
+  `;
+
+  document.getElementById('pgrid').innerHTML=PROVS.map(p=>{
+    const pd=D.provincias[p];
+    const tasks=pd.tasks||[];
+    const d=tasks.filter(t=>t.done).length,tot=tasks.length;
+    const pct=tot?Math.round(d/tot*100):0;
+    const pausa=pd.status==='pendiente'||pd.status==='pausado';
+    const dc=pd.status==='activo'?'d-a':pd.status==='pendiente'?'d-p':'d-x';
+    const cc=pd.status==='activo'?'c-a':pd.status==='pendiente'?'c-p':'c-x';
+    const lbl=pd.status==='activo'?'Activo':pd.status==='pendiente'?'Pendiente':'Pausado';
+    const nextTxt=pausa?'En pausa':(pd.next||'');
+    return`<div class="pc ${pausa?'pausa':''}">
+      <div class="pc-top">
+        <div class="pc-name">${p}</div>
+        <div class="pc-badge ${cc}"><span class="dot ${dc}"></span>${lbl}</div>
+      </div>
+      ${nextTxt?`<div class="pc-next ${pausa?'pausa-txt':''}">${nextTxt}</div>`:''}
+
+    </div>`;
+  }).join('');
+
+  let sD=0,sE=0;
+  const rows=PROVS.map(p=>{
+    const c=D.provincias[p]?.creditos||{desembolsado:0,enProceso:0};
+    const d=c.desembolsado||0,e=c.enProceso||0,t=d+e;
+    sD+=d;sE+=e;
+    return`<tr><td class="cprov">${p}</td><td class="${d?'cpos':''}">${fmt$(d)}</td><td class="${e?'cpos':''}">${fmt$(e)}</td><td class="${t?'cpos':''}">${fmt$(t)}</td></tr>`;
+  }).join('');
+  document.getElementById('cbody').innerHTML=rows+`<tr class="ctotal-row"><td class="cprov">Total</td><td class="${sD?'cpos':''}">${fmt$(sD)}</td><td class="${sE?'cpos':''}">${fmt$(sE)}</td><td class="${(sD+sE)?'cpos':''}">${fmt$(sD+sE)}</td></tr>`;
+}
+
+function triggerImport(){document.getElementById('xl-in').click();}
+function handleImport(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      let upd=0;
+      const shAg=wb.SheetNames.find(n=>norm(n)==='agenda'||norm(n)==='tareas');
+      if(shAg){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets[shAg],{header:1,defval:''});
+        const byP={};
+        rows.slice(1).forEach(r=>{
+          const p=String(r[0]||'').trim();
+          const txt=String(r[1]||'').trim();
+          if(!p||!txt)return;
+          const key=PROVS.find(pv=>norm(pv)===norm(p));
+          if(!key)return;
+          if(!byP[key])byP[key]=[];
+          const comp=String(r[3]||'').trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+          byP[key].push({text:txt,done:['SI','S','YES','TRUE','1'].includes(comp),due:parseXlDate(r[2]),notes:String(r[4]||'').trim()});
+        });
+        Object.keys(byP).forEach(p=>{D.provincias[p].tasks=byP[p];upd++;});
+      }
+      const shCr=wb.SheetNames.find(n=>norm(n)==='creditos');
+      if(shCr){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets[shCr],{header:1,defval:''});
+        rows.slice(1).forEach(r=>{
+          const p=String(r[0]||'').trim();
+          const key=PROVS.find(pv=>norm(pv)===norm(p));
+          if(!key||p==='TOTAL'||p.startsWith('*'))return;
+          D.provincias[key].creditos={desembolsado:parseVal(r[1]),enProceso:parseVal(r[2])};upd++;
+        });
+      }
+      // Historia: only update STATUS from Estado actual, NOT next step
+      const shHi=wb.SheetNames.find(n=>norm(n)==='historia'||norm(n)==='historial');
+      if(shHi){
+        const rows=XLSX.utils.sheet_to_json(wb.Sheets[shHi],{header:1,defval:''});
+        rows.slice(1).forEach(r=>{
+          const p=String(r[0]||'').trim();
+          const key=PROVS.find(pv=>norm(pv)===norm(p));
+          if(!key)return;
+          const tipo=String(r[2]||'').trim().toLowerCase();
+          const estado=String(r[5]||'').trim().toLowerCase();
+          if(tipo==='estado actual'&&estado) D.provincias[key].status=estado;
+        });
+      }
+      // Agenda: take next step from LAST row with notes for each province
+      PROVS.forEach(p=>{
+        const tasks=D.provincias[p]?.tasks||[];
+        for(let i=tasks.length-1;i>=0;i--){
+          if(tasks[i].notes&&String(tasks[i].notes).trim()){
+            D.provincias[p].next=String(tasks[i].notes).trim();
+            break;
+          }
+        }
+      });
+      render();
+      toast('✓ Importado: '+upd+' registros actualizados');
+    }catch(err){toast('Error: '+err.message);console.error(err);}
+  };
+  reader.readAsArrayBuffer(file);
+  e.target.value='';
+}
+function exportHTML(){
+  const inject=`<script>window.__DATA__=${JSON.stringify(D)};<\/script>`;
+  let src=document.documentElement.outerHTML;
+  src=src.replace('</head>',inject+'\n</head>');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([src],{type:'text/html;charset=utf-8'}));
+  a.download='index.html';a.click();URL.revokeObjectURL(a.href);
+  toast('✓ HTML exportado');
+}
+</script>
+
+
+</body></html>
